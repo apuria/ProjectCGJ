@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 030013200b5fac74bbd9b89d55fbb568, type: 3}
+  m_Name: "Dialogue_\u5F00\u5E55CG"
+  m_EditorClassIdentifier: 
+  hasReturnButton: 0
+  hasBackground: 0
+  BackGround: {fileID: 0}
+  speakers: []
+  dialogues:
+  - dialogueType: 1
+    cgImage: {fileID: 21300000, guid: 4f1c75420abafbb4aa45d978745ad4f5, type: 3}
+    showDialogueBox: 0
+    leftSpeakerIndex: -1
+    rightSpeakerIndex: -1
+    talkingSpeaker: 0
+    text: 
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 1
+    cgImage: {fileID: 21300000, guid: f5462fbf0c6a29247a9606be7b53c951, type: 3}
+    showDialogueBox: 0
+    leftSpeakerIndex: -1
+    rightSpeakerIndex: -1
+    talkingSpeaker: 0
+    text: 
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 1
+    cgImage: {fileID: 21300000, guid: d6b31490fb2b16f4396a6e8f2543193c, type: 3}
+    showDialogueBox: 0
+    leftSpeakerIndex: -1
+    rightSpeakerIndex: -1
+    talkingSpeaker: 0
+    text: 
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 1
+    cgImage: {fileID: 21300000, guid: ccae2ccb65da38d4a94114c4e8bd52e8, type: 3}
+    showDialogueBox: 0
+    leftSpeakerIndex: -1
+    rightSpeakerIndex: -1
+    talkingSpeaker: 0
+    text: 
+    onEnd: 6
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 11400000, guid: b4051c10fa91cd740908b7b8f6cb43c3, type: 2}
+    End: {fileID: 0}

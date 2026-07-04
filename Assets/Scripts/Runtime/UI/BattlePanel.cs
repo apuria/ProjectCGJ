@@ -120,6 +120,10 @@ public class BattlePanel : BasePanel
         if (hpadnmp != null) hpadnmp.gameObject.SetActive(false);
         if (roleState != null) roleState.gameObject.SetActive(false);
         if (enemyActionToast != null) enemyActionToast.gameObject.SetActive(false);
+
+        if (roles != null) roles.gameObject.SetActive(false);
+
+        
     }
 
     protected void Start()
@@ -216,6 +220,12 @@ public class BattlePanel : BasePanel
             HideActionButtons();
             BattleEventDefine.NextTurn.SendEventMessage();
         });
+
+        // 设置异形按钮的 alphaHitTestMinimumThreshold，使透明通道部分不响应射线检测
+        SetupAlphaHitThreshold(btnAttack);
+        SetupAlphaHitThreshold(btnDefend);
+        SetupAlphaHitThreshold(btnSkill);
+        SetupAlphaHitThreshold(btnRun);
     }
 
     protected void OnDestroy()
@@ -259,6 +269,21 @@ public class BattlePanel : BasePanel
             {
                 enemyHpSliders[i].gameObject.SetActive(false);
             }
+        }
+    }
+
+    /// <summary>
+    /// 设置 Button 上 Image 的 alphaHitTestMinimumThreshold，使图片透明区域不响应射线检测
+    /// </summary>
+    /// <param name="btn">目标按钮</param>
+    /// <param name="threshold">Alpha 阈值，默认 0.5</param>
+    private void SetupAlphaHitThreshold(Button btn, float threshold = 0.5f)
+    {
+        if (btn == null) return;
+        var image = btn.GetComponent<Image>();
+        if (image != null)
+        {
+            image.alphaHitTestMinimumThreshold = threshold;
         }
     }
 

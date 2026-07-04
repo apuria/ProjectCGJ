@@ -80,6 +80,10 @@ public class DialogueState : BaseState
                 // 结束分支，回到地图界面，玩家数据进入下一个节点
                 EndBranch();
                 break;
+            case EOnEnd.NextLog:
+                // 切换到下一个对话
+                NextLogDialogue();
+                break;
             case EOnEnd.End:
                 // 进入 EndState，根据 EndSetting 中的分支条件决定后续流程
                 StartEnd();
@@ -106,6 +110,25 @@ public class DialogueState : BaseState
             DiaLogueEventDefine.UpdateUI.SendEventMessage(dialogue.leftSpeakerIndex, dialogue.rightSpeakerIndex, dialogue.text, dialogue.talkingSpeaker,
                 dialogue.dialogueType, dialogue.cgImage, dialogue.showDialogueBox);
         }
+    }
+
+    private void NextLogDialogue()
+    {
+        var nextLog = nowDialogue.dialogues[index].NextLog;
+        if (nextLog == null)
+        {
+            Debug.LogWarning("DialogueState: NextLog is null, fallback to GoBackToLastState");
+            GoBackToLastState();
+            return;
+        }
+        // 不创建新的 DialogueState，直接在当前状态内替换对话数据
+        // 避免 OnCreate(ShowPanel) → OnDispose(HidePanel) 导致面板被错误销毁
+        nowDialogue = nextLog;
+        index = 0;
+        DiaLogueEventDefine.ShowUI.SendEventMessage(nowDialogue.speakers, nowDialogue.hasBackground, nowDialogue.BackGround, nowDialogue.hasReturnButton);
+        var dialogue = nowDialogue.dialogues[index];
+        DiaLogueEventDefine.UpdateUI.SendEventMessage(dialogue.leftSpeakerIndex, dialogue.rightSpeakerIndex, dialogue.text, dialogue.talkingSpeaker,
+            dialogue.dialogueType, dialogue.cgImage, dialogue.showDialogueBox);
     }
 
     private void StartBattle()
