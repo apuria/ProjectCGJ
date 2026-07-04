@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d45e8793e655744a8a1169da8fe49bc, type: 3}
+  m_Name: New Battle Setting
+  m_EditorClassIdentifier: 
+  Background: {fileID: 0}
+  enemies:
+  - {fileID: 11400000, guid: a279694514c6f4843bc34b8a81185097, type: 2}
+  - {fileID: 11400000, guid: 2c0c736caf1e746428eaceaedfae3302, type: 2}
+  - {fileID: 11400000, guid: a279694514c6f4843bc34b8a81185097, type: 2}
+  moreRoleBranches: []
+  startEvent: 1
+  startDialogue: {fileID: 11400000, guid: a0522807560cf7541b3202f13d5590a3, type: 2}
+  startBranch: {fileID: 0}
+  winEvent: 6
+  winDialogue: {fileID: 0}
+  winBranch: {fileID: 0}
+  loseEvent: 6
+  loseDialogue: {fileID: 0}
+  loseBranch: {fileID: 0}
+  winEndSetting: {fileID: 11400000, guid: bf38d1db5916b0546ad527cbd485e6c6, type: 2}
+  loseEndSetting: {fileID: 11400000, guid: bf38d1db5916b0546ad527cbd485e6c6, type: 2}
+  midEvents: []
