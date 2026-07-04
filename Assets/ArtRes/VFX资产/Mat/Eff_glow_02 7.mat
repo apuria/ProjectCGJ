@@ -136,7 +136,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _FreiColor: {r: 1, g: 0.6950364, b: 0.0990566, a: 0}
-    - _FreiColor1: {r: 1.9478786, g: 1.6207627, b: 1.1668893, a: 1}
+    - _FreiColor1: {r: 10.556064, g: 3.3883452, b: 0.5975113, a: 1}
     - _FreiColor2: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _Vector0: {r: 0, g: 0, b: 0, a: 0}

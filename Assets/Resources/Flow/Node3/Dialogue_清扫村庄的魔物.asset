@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 030013200b5fac74bbd9b89d55fbb568, type: 3}
+  m_Name: "Dialogue_\u6E05\u626B\u6751\u5E84\u7684\u9B54\u7269"
+  m_EditorClassIdentifier: 
+  hasReturnButton: 0
+  hasBackground: 0
+  BackGround: {fileID: 0}
+  speakers:
+  - name: "\u5B89\u514B"
+    CharaArtwork: {fileID: 1997713814, guid: 02943381274cb3d489588ac2638b13e7, type: 3}
+  - name: "\u5DF4\u6797"
+    CharaArtwork: {fileID: 21300000, guid: fe939482d61935f4989a7e65b4c5ba3b, type: 3}
+  dialogues:
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 0
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 0
+    text: "\u8FD9\u7FA4\u8BE5\u6B7B\u7684\u9B54\u7269\u5C06\u8FD9\u4E2A\u6751\u5E84\u5316\u505A\u4E86\u5730\u72F1"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 0
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 1
+    text: "\u5B69\u5B50\uFF0C\u5982\u679C\u4F60\u6709\u7A7A\u7684\u8BDD\uFF0C\u6765\u642D\u628A\u624B\uFF0C\u6211\u60F3\u8BA9\u4ED6\u4EEC\u5B89\u5FC3\u7684\u8D70"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 0
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 0
+    text: "\uFF08\u4E00\u8FB9\u5E2E\u5FD9\u4E00\u8FB9\u8BB2\u8BDD\uFF09\u5927\u53D4\uFF0C\u6211\u4EEC\u4E00\u5B9A\u4F1A\u4E3A\u4ED6\u4EEC\u62A5\u4EC7\u7684"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 0
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 1
+    text: "\u597D\u5B69\u5B50\uFF08\u4E3E\u8D77\u4E86\u5927\u62C7\u6307\uFF0C\u4E0D\u8FC7\u8C8C\u4F3C\u592A\u77EE\u4E86\u5B89\u514B\u6CA1\u770B\u5230\uFF09"
+    onEnd: 1
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
