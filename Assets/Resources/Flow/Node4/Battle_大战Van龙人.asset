@@ -10,21 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d45e8793e655744a8a1169da8fe49bc, type: 3}
-  m_Name: New Battle Setting
+  m_Name: "Battle_\u5927\u6218Van\u9F99\u4EBA"
   m_EditorClassIdentifier: 
   bgmName: 
   Background: {fileID: 0}
   enemies:
-  - {fileID: 11400000, guid: a279694514c6f4843bc34b8a81185097, type: 2}
-  - {fileID: 11400000, guid: 2c0c736caf1e746428eaceaedfae3302, type: 2}
-  - {fileID: 11400000, guid: a279694514c6f4843bc34b8a81185097, type: 2}
-  moreItemBranches:
-  - branchId: 123
-    choose: 123
-    buffInfo: {fileID: 11400000, guid: 50e013ae71ed4db4c9d7f4b639d4379a, type: 2}
-    isForAllRole: 1
-    roleIndex: 0
-    isEveryRound: 0
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  moreItemBranches: []
   moreRoleBranches:
   - roleIndex: 0
     branchId: 
@@ -32,15 +26,15 @@ MonoBehaviour:
   - roleIndex: 1
     branchId: 
     choose: 
-  startEvent: 1
-  startDialogue: {fileID: 11400000, guid: fe012da02fb24224cb5016169452b69a, type: 2}
+  startEvent: 0
+  startDialogue: {fileID: 0}
   startBranch: {fileID: 0}
-  winEvent: 6
-  winDialogue: {fileID: 0}
+  winEvent: 1
+  winDialogue: {fileID: 11400000, guid: 0008d5954ff164a459916d767f5c4706, type: 2}
   winBranch: {fileID: 0}
   loseEvent: 4
   loseDialogue: {fileID: 0}
   loseBranch: {fileID: 0}
-  winEndSetting: {fileID: 11400000, guid: bf38d1db5916b0546ad527cbd485e6c6, type: 2}
+  winEndSetting: {fileID: 0}
   loseEndSetting: {fileID: 0}
   midEvents: []

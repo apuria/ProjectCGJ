@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniFramework.Machine;
 
-[CreateAssetMenu(fileName = "New Dialogue", menuName = "Dialogue/New Dialogue", order = 0)]
+[CreateAssetMenu(fileName = "Dialogue", menuName = "Setting/Dialogue", order = 0)]
 public class DialogueSetting : ScriptableObject, IStateData
 {
     [Header("Music Settings")]

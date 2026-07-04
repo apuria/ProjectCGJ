@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030013200b5fac74bbd9b89d55fbb568, type: 3}
   m_Name: "Dialogue_\u9047\u5230\u77EE\u4EBA"
   m_EditorClassIdentifier: 
+  bgmName: 
   hasReturnButton: 0
   hasBackground: 0
   BackGround: {fileID: 0}
@@ -81,7 +82,7 @@ MonoBehaviour:
     talkingSpeaker: 0
     text: "\u5927\u53D4\uFF0C\u6211\u6765\u5E2E\u4F60\uFF01"
     onEnd: 1
-    Battle: {fileID: 0}
+    Battle: {fileID: 11400000, guid: 5b94d496f3cce8f41ac65f4187eb12f9, type: 2}
     Branch: {fileID: 0}
     NextLog: {fileID: 0}
     End: {fileID: 0}

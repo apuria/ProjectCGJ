@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniFramework.Machine;
 
-[CreateAssetMenu(fileName = "New Branch", menuName = "Branch/New Branch")]
+[CreateAssetMenu(fileName = "Branch", menuName = "Setting/Branch")]
 public class BranchSetting : ScriptableObject, IStateData
 {
     [Tooltip("当前分支选项对应的选择配置")]

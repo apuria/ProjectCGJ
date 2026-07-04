@@ -13,7 +13,7 @@ public enum SkillTargetType
     Ally
 }
 
-[CreateAssetMenu(fileName = "New Skill", menuName = "Skill")]
+[CreateAssetMenu(fileName = "SkillInfo", menuName = "Info/SkillInfo")]
 public class SkillInfo : ScriptableObject
 {
     public string skillName;

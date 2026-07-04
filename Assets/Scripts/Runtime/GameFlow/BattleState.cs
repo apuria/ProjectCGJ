@@ -70,10 +70,18 @@ public class BattleState : BaseState
     private List<MoreItemBranch> everyRoundBuffs = new();
 
     /// <summary>
+    /// 当前回合的 round++ / ApplyEveryRoundBuffs 是否已执行。
+    /// 用于防止 NextRound() 被中途事件中断后、返回再次执行 NextRound 时重复递增回合和重复应用 buff。
+    /// </summary>
+    private bool roundAdvanced = false;
+
+    /// <summary>
     /// 角色初始属性快照，用于百分比 buff 计算的基础参考值（避免每回合叠加时复合膨胀）
     /// </summary>
     private struct InitialStatSnapshot
     {
+        public float maxHp;
+        public float maxMp;
         public float attack;
         public float shieldValue;
         public float speed;
@@ -423,6 +431,8 @@ public class BattleState : BaseState
             {
                 roleInitialStats[role] = new InitialStatSnapshot
                 {
+                    maxHp       = role.maxHp.value,
+                    maxMp       = role.maxMp.value,
                     attack      = role.attack.value,
                     shieldValue = role.shieldValue.value,
                     speed       = role.speed.value,
@@ -461,7 +471,7 @@ public class BattleState : BaseState
         EnemyAI.Reset();
 
         // 发送初始化战斗UI事件：展示角色和敌人，隐藏按钮和Action界面
-        BattleEventDefine.InitBattleUI.SendEventMessage(roleList, enemyList);
+        BattleEventDefine.InitBattleUI.SendEventMessage(roleList, enemyList, battleSetting.Background);
     }
 
     /// <summary>
@@ -471,13 +481,15 @@ public class BattleState : BaseState
     private static void EnsureStatDefaults(BaseInfo info)
     {
         if (info == null) return;
-        // 仅当值未配置（≤0）时写入默认值；已在 Editor 中配置的值不受影响
+        // maxHp/hp：0 或负值视为未配置（0 血角色无意义）
         if (info.maxHp.value <= 0)  info.maxHp.value = 100;
         if (info.hp.value <= 0)     info.hp.value = info.maxHp.value;
-        if (info.maxMp.value <= 0)  info.maxMp.value = 50;
-        if (info.mp.value <= 0)     info.mp.value = info.maxMp.value;
-        if (info.speed.value <= 0)  info.speed.value = 10;
-        if (info.shieldValue.value <= 0) info.shieldValue.value = 10;
+        // 其余属性：仅负值视为未配置，0 是合法值（如无 MP、0 攻击、0 护盾）
+        if (info.maxMp.value < 0)  info.maxMp.value = 50;
+        if (info.mp.value < 0)     info.mp.value = info.maxMp.value;
+        if (info.attack.value < 0) info.attack.value = 20;
+        if (info.speed.value < 0)  info.speed.value = 10;
+        if (info.shieldValue.value < 0) info.shieldValue.value = 10;
     }
 
     /// <summary>
@@ -579,14 +591,30 @@ public class BattleState : BaseState
 
         //下一个回合
         /*
-        1. 清空回合队列
-        2. 计算角色和敌人的行动顺序
-        3. 构建完整行动队列
-        4. 调用 StartTurn()
+        1. 递增回合并应用每回合 buff（仅当本回合尚未递增过时执行）
+        2. 检查中途事件
+        3. 清空回合队列
+        4. 计算角色和敌人的行动顺序
+        5. 构建完整行动队列
+        6. 调用 StartTurn()
         */
-        round++;
-        ApplyEveryRoundBuffs();
+
+        // 仅当本轮尚未递增时才执行，防止中途事件中断 NextRound 后、
+        // 再次进入 NextRound 时重复递增回合和重复应用 buff
+        if (!roundAdvanced)
+        {
+            round++;
+            ApplyEveryRoundBuffs();
+            roundAdvanced = true;
+        }
+
         CheckMidEvent();
+        // 若 CheckMidEvent 触发了中途事件（状态切换），roundAdvanced 保持 true，
+        // 当前 NextRound 的后续代码不会执行。事件返回后将重新进入 NextRound，
+        // 此时 !roundAdvanced 为 false，跳过重复递增。
+
+        roundAdvanced = false;
+
         roundQueue.Clear();
         roundList.Clear();
         foreach (var role in roleList)
@@ -810,15 +838,18 @@ public class BattleState : BaseState
 
     /// <summary>
     /// 计算百分比 buff 的实际数值。
-    /// HP/MP/MAXHP/MAXMP 基于当前最大值；
-    /// ATK/DEF/SPD 基于战斗开始时的初始属性（避免每回合叠加时复合膨胀）。
+    /// 所有属性均基于战斗开始时的初始属性快照，避免每回合叠加时复合膨胀。
     /// </summary>
     private float GetBuffPercentageValue(RoleInfo role, BuffInfo buff)
     {
         return buff.buffType switch
         {
-            StatType.HP or StatType.MAXHP => role.maxHp.value * buff.value,
-            StatType.MP or StatType.MAXMP => role.maxMp.value * buff.value,
+            StatType.HP or StatType.MAXHP => (roleInitialStats.TryGetValue(role, out var snap)
+                ? snap.maxHp
+                : role.maxHp.value) * buff.value,
+            StatType.MP or StatType.MAXMP => (roleInitialStats.TryGetValue(role, out var snap)
+                ? snap.maxMp
+                : role.maxMp.value) * buff.value,
             StatType.ATK => (roleInitialStats.TryGetValue(role, out var snap)
                 ? snap.attack
                 : role.attack.value) * buff.value,

@@ -10,6 +10,7 @@ using UnityEngine;
 public class BattleSettingEditor : Editor
 {
     private SerializedProperty bgmNameProp;
+    private SerializedProperty backgroundProp;
     private SerializedProperty enemiesProp;
 
     // 开始事件
@@ -46,6 +47,7 @@ public class BattleSettingEditor : Editor
     private void OnEnable()
     {
         bgmNameProp = serializedObject.FindProperty("bgmName");
+        backgroundProp = serializedObject.FindProperty("Background");
         enemiesProp = serializedObject.FindProperty("enemies");
 
         startEventProp = serializedObject.FindProperty("startEvent");
@@ -74,6 +76,14 @@ public class BattleSettingEditor : Editor
 
         // ── 音乐 ──
         EditorGUILayout.PropertyField(bgmNameProp, new GUIContent("背景音乐"));
+        EditorGUILayout.Space();
+
+        // ── 背景图 ──
+        EditorGUILayout.PropertyField(backgroundProp, new GUIContent("自定义背景图"));
+        if (backgroundProp.objectReferenceValue == null)
+        {
+            EditorGUILayout.HelpBox("背景图为空，将使用默认背景。", MessageType.Info);
+        }
         EditorGUILayout.Space();
 
         // ── 敌人列表 ──

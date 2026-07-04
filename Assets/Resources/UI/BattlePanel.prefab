@@ -479,6 +479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e07ea722dbe431848ae22135ce92196d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BG: {fileID: 7396280871175404107}
   btnSetting: {fileID: 2934339933116772837}
   settingPanel: {fileID: 9180500306794584036}
   btnState: {fileID: 621799188893267272}

@@ -481,16 +481,24 @@ public class GameManager : SingletonMono<GameManager>
     /// </summary>
     public void NodeGameEvent()
     {
-        switch (gameNodes[(int)playerData.NowFlow].stateType)
+        int nodeIndex = (int)playerData.NowFlow;
+        if (nodeIndex < 0 || nodeIndex >= gameNodes.Count)
+        {
+            Debug.LogError($"NodeGameEvent: NowFlow={playerData.NowFlow} (index={nodeIndex}) 超出 gameNodes 范围 (0~{gameNodes.Count - 1})，无法进入节点，返回地图。");
+            SwitchToWithLoading(typeof(MapState), "MapState", null);
+            return;
+        }
+
+        switch (gameNodes[nodeIndex].stateType)
         {
             case GameState.Battle:
-                StartBattle(gameNodes[(int)playerData.NowFlow].battleSetting);
+                StartBattle(gameNodes[nodeIndex].battleSetting);
                 break;
             case GameState.DiaLogue:
-                StartDiaLogue(gameNodes[(int)playerData.NowFlow].dialogueSetting);
+                StartDiaLogue(gameNodes[nodeIndex].dialogueSetting);
                 break;
             case GameState.Branch:
-                StartBranch(gameNodes[(int)playerData.NowFlow].branchSetting);
+                StartBranch(gameNodes[nodeIndex].branchSetting);
                 break;
         }
     }

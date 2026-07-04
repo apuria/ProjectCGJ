@@ -189,7 +189,7 @@ public class PlayerBattleState : BaseBattleState
     private void ExecuteAttack(SkillInfo skill, int enemyIdx)
     {
         int damage = Mathf.RoundToInt(info.roleInfo.attack.value * skill.Damage);
-        int actorIdx = info.roleList != null ? info.roleList.IndexOf(info.roleInfo) : 0;
+        int actorIdx = info.roleList != null ? info.roleList.IndexOf(info.roleInfo) : -1;
         BattleEventDefine.EnemyHpChange.SendEventMessage(enemyIdx, damage,
             attackerIdx: actorIdx,
             attackEffect: skill.attackEffect,
@@ -202,7 +202,7 @@ public class PlayerBattleState : BaseBattleState
     private void ExecuteAOE(SkillInfo skill)
     {
         int damage = Mathf.RoundToInt(info.roleInfo.attack.value * skill.Damage);
-        int actorIdx = info.roleList != null ? info.roleList.IndexOf(info.roleInfo) : 0;
+        int actorIdx = info.roleList != null ? info.roleList.IndexOf(info.roleInfo) : -1;
         for (int i = 0; i < info.enemyList.Count; i++)
         {
             if (info.enemyList[i] != null && info.enemyList[i].hp.value > 0)
@@ -220,7 +220,7 @@ public class PlayerBattleState : BaseBattleState
     /// </summary>
     private void ExecuteHealAlly(SkillInfo skill, int allyIdx)
     {
-        int actorIdx = info.roleList != null ? info.roleList.IndexOf(info.roleInfo) : 0;
+        int actorIdx = info.roleList != null ? info.roleList.IndexOf(info.roleInfo) : -1;
         int healValue = Mathf.RoundToInt(info.roleInfo.attack.value * skill.Damage);
 
         // 通过 RoleHpChange 发送负值表示治疗
@@ -243,7 +243,7 @@ public class PlayerBattleState : BaseBattleState
     /// </summary>
     private void ExecuteAOEHeal(SkillInfo skill)
     {
-        int actorIdx = info.roleList != null ? info.roleList.IndexOf(info.roleInfo) : 0;
+        int actorIdx = info.roleList != null ? info.roleList.IndexOf(info.roleInfo) : -1;
         int healValue = Mathf.RoundToInt(info.roleInfo.attack.value * skill.Damage);
 
         for (int i = 0; i < info.roleList.Count; i++)

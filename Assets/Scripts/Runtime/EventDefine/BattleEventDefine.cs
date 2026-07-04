@@ -118,12 +118,14 @@ public class BattleEventDefine : MonoBehaviour
     {
         public List<RoleInfo> roleList;
         public List<EnemyInfo> enemyList;
+        public Sprite customBackground;
 
-        public static void SendEventMessage(List<RoleInfo> roleList, List<EnemyInfo> enemyList)
+        public static void SendEventMessage(List<RoleInfo> roleList, List<EnemyInfo> enemyList, Sprite customBackground = null)
         {
             var msg = new InitBattleUI();
             msg.roleList = roleList;
             msg.enemyList = enemyList;
+            msg.customBackground = customBackground;
             UniEvent.SendMessage(msg);
         }
     }

@@ -12,17 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d45e8793e655744a8a1169da8fe49bc, type: 3}
   m_Name: "Battle_\u4E0E\u53F2\u83B1\u59C6\u6218\u6597"
   m_EditorClassIdentifier: 
+  bgmName: 
   Background: {fileID: 0}
-  enemies: []
+  enemies:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   moreItemBranches: []
   moreRoleBranches: []
   startEvent: 0
   startDialogue: {fileID: 0}
   startBranch: {fileID: 0}
-  winEvent: 0
+  winEvent: 5
   winDialogue: {fileID: 0}
   winBranch: {fileID: 0}
-  loseEvent: 0
+  loseEvent: 4
   loseDialogue: {fileID: 0}
   loseBranch: {fileID: 0}
   winEndSetting: {fileID: 0}

@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using UniFramework.Machine;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-[CreateAssetMenu(fileName = "New Battle Setting", menuName = "Battle/New Battle Setting")]
+[CreateAssetMenu(fileName = "Battle", menuName = "Setting/Battle")]
 public class BattleSetting : ScriptableObject, IStateData
 {
     /*
@@ -19,6 +18,8 @@ public class BattleSetting : ScriptableObject, IStateData
     [Tooltip("背景音乐名称（留空则播放 DefaultBGM）")]
     public string bgmName;
 
+    [Header("Background Settings")]
+    [Tooltip("自定义背景图，为空则使用默认背景")]
     public Sprite Background;
 
     [Tooltip("敌人列表（最多三个）")]

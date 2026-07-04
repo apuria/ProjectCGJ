@@ -26,7 +26,7 @@ public class EndBranch
     public DialogueSetting Setting;
 }
 
-[CreateAssetMenu(fileName = "EndSetting", menuName = "Settings/EndSetting", order = 1)]
+[CreateAssetMenu(fileName = "EndSetting", menuName = "Setting/EndSetting", order = 1)]
 public class EndSetting : ScriptableObject, IStateData
 {
     [SerializeField]

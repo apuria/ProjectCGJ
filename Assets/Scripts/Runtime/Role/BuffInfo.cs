@@ -13,7 +13,7 @@ public enum StatType
     SPD,
 }
 
-[CreateAssetMenu(fileName = "BuffInfo", menuName = "BuffInfo", order = 1)]
+[CreateAssetMenu(fileName = "BuffInfo", menuName = "Info/BuffInfo", order = 1)]
 public class BuffInfo : ScriptableObject
 {
     public string buffName;

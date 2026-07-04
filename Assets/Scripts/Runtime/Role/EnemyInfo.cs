@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EnemyInfo", menuName = "Info/New EnemyInfo")]
+[CreateAssetMenu(fileName = "EnemyInfo", menuName = "Info/EnemyInfo")]
 public class EnemyInfo : BaseInfo
 {
 // 敌人信息

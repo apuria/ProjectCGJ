@@ -14,6 +14,7 @@ public class BattlePanel : BasePanel
 
 #region 属性
 
+    public Image BG;
     public Button btnSetting;
     public SettingPanel settingPanel;
     public Button btnState;
@@ -167,7 +168,7 @@ public class BattlePanel : BasePanel
         // btnRun: 逃跑按钮 → 重新开始战斗（弹出确认对话框）
         btnRun.onClick.AddListener(() =>
         {
-            TipPanelEventDefine.ShowTip.SendEventMessage("确定要重新开始战斗吗？", "确认",
+            TipPanelEventDefine.ShowTip.SendEventMessage("确定要进行回溯吗？", "确认",
                 () => SceneEventDefine.NodeGame.SendEventMessage(), "取消", null);
         });
 
@@ -440,7 +441,11 @@ public class BattlePanel : BasePanel
         currentEnemyList = msg.enemyList;
         RefreshEnemyHpSliders();
 
-        // 6. 失活所有 Tip
+        // 6. 设置自定义背景图（为空则保留默认背景）
+        if (msg.customBackground != null && BG != null)
+            BG.sprite = msg.customBackground;
+
+        // 7. 失活所有 Tip
         if (enemies != null) enemies.DeactivateAllTips();
     }
 

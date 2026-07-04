@@ -86,6 +86,11 @@ public class BaseInfo : ScriptableObject
         {
             case StatType.MAXHP:
                 maxHp.value += value;
+                // 增加上限时同步增加当前 HP；减少上限时仅 clamp
+                if (value > 0)
+                    hp.value += value;
+                else if (hp.value > maxHp.value)
+                    hp.value = maxHp.value;
                 break;
             case StatType.HP:
                 hp.value += value;
@@ -94,6 +99,11 @@ public class BaseInfo : ScriptableObject
                 break;
             case StatType.MAXMP:
                 maxMp.value += value;
+                // 增加上限时同步增加当前 MP；减少上限时仅 clamp
+                if (value > 0)
+                    mp.value += value;
+                else if (mp.value > maxMp.value)
+                    mp.value = maxMp.value;
                 break;
             case StatType.MP:
                 mp.value += value;

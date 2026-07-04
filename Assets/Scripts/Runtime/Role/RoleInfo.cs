@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "RoleInfo", menuName = "Info/New RoleInfo")]
+[CreateAssetMenu(fileName = "RoleInfo", menuName = "Info/RoleInfo")]
 public class RoleInfo : BaseInfo
 {
 //角色信息
