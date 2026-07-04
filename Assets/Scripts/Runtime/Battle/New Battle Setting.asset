@@ -17,16 +17,29 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a279694514c6f4843bc34b8a81185097, type: 2}
   - {fileID: 11400000, guid: 2c0c736caf1e746428eaceaedfae3302, type: 2}
   - {fileID: 11400000, guid: a279694514c6f4843bc34b8a81185097, type: 2}
-  moreRoleBranches: []
+  moreItemBranches:
+  - branchId: 123
+    choose: 123
+    buffInfo: {fileID: 11400000, guid: 50e013ae71ed4db4c9d7f4b639d4379a, type: 2}
+    isForAllRole: 1
+    roleIndex: 0
+    isEveryRound: 1
+  moreRoleBranches:
+  - roleIndex: 0
+    branchId: 
+    choose: 
+  - roleIndex: 1
+    branchId: 
+    choose: 
   startEvent: 1
-  startDialogue: {fileID: 11400000, guid: a0522807560cf7541b3202f13d5590a3, type: 2}
+  startDialogue: {fileID: 11400000, guid: fe012da02fb24224cb5016169452b69a, type: 2}
   startBranch: {fileID: 0}
   winEvent: 6
   winDialogue: {fileID: 0}
   winBranch: {fileID: 0}
-  loseEvent: 6
+  loseEvent: 4
   loseDialogue: {fileID: 0}
   loseBranch: {fileID: 0}
   winEndSetting: {fileID: 11400000, guid: bf38d1db5916b0546ad527cbd485e6c6, type: 2}
-  loseEndSetting: {fileID: 11400000, guid: bf38d1db5916b0546ad527cbd485e6c6, type: 2}
+  loseEndSetting: {fileID: 0}
   midEvents: []

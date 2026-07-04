@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 646abc57e6d6fe74a9252bafdf104fb7, type: 3}
   m_Name: New Branch
   m_EditorClassIdentifier: 
-  id: "\u662F\u5426\u6551\u8FD9\u4E2A\u7CBE\u7075"
+  id: 123
   branches:
-  - chosen: "\u4E0D\u6551"
+  - chosen: 123
     text: "\u4E0D\u6551"
-  - chosen: "\u6551"
+  - chosen: 123
     text: "\u6551"
   onEnd: 5
   nextDialogue: {fileID: 0}
   battleSetting: {fileID: 0}
   nextBranch: {fileID: 0}
+  endSetting: {fileID: 0}

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -35,6 +36,12 @@ public class BattleSettingEditor : Editor
     // 多角色分支
     private SerializedProperty moreRoleBranchesProp;
 
+    // 道具分支
+    private SerializedProperty moreItemBranchesProp;
+
+    // 道具分支折叠状态
+    private List<bool> itemBranchFoldouts = new();
+
     private void OnEnable()
     {
         enemiesProp = serializedObject.FindProperty("enemies");
@@ -56,6 +63,7 @@ public class BattleSettingEditor : Editor
 
         midEventsProp = serializedObject.FindProperty("midEvents");
         moreRoleBranchesProp = serializedObject.FindProperty("moreRoleBranches");
+        moreItemBranchesProp = serializedObject.FindProperty("moreItemBranches");
     }
 
     public override void OnInspectorGUI()
@@ -69,6 +77,11 @@ public class BattleSettingEditor : Editor
 
         // ── 多角色分支 ──
         EditorGUILayout.PropertyField(moreRoleBranchesProp, new GUIContent("More Role Branches"), true);
+
+        EditorGUILayout.Space();
+
+        // ── 道具分支 ──
+        DrawMoreItemBranches();
 
         EditorGUILayout.Space();
 
@@ -296,5 +309,151 @@ public class BattleSettingEditor : Editor
         };
 
         return $"Mid Event [{index}] | {triggerDesc} → {actionDesc}";
+    }
+
+    // ─────────────────── 道具分支绘制 ───────────────────
+
+    private void DrawMoreItemBranches()
+    {
+        EditorGUILayout.LabelField("More Item Branches (道具分支)", EditorStyles.boldLabel);
+
+        if (moreItemBranchesProp == null) return;
+
+        // 同步折叠状态列表与数组大小
+        while (itemBranchFoldouts.Count < moreItemBranchesProp.arraySize)
+            itemBranchFoldouts.Add(true);
+        while (itemBranchFoldouts.Count > moreItemBranchesProp.arraySize)
+            itemBranchFoldouts.RemoveAt(itemBranchFoldouts.Count - 1);
+
+        for (int i = 0; i < moreItemBranchesProp.arraySize; i++)
+        {
+            var elementProp = moreItemBranchesProp.GetArrayElementAtIndex(i);
+            DrawMoreItemBranchElement(elementProp, i);
+            EditorGUILayout.Space();
+        }
+
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("+ Add Item Branch"))
+        {
+            moreItemBranchesProp.arraySize++;
+            itemBranchFoldouts.Add(true);
+        }
+        if (moreItemBranchesProp.arraySize > 0)
+        {
+            if (GUILayout.Button("Remove Last"))
+            {
+                moreItemBranchesProp.arraySize--;
+                if (itemBranchFoldouts.Count > 0)
+                    itemBranchFoldouts.RemoveAt(itemBranchFoldouts.Count - 1);
+            }
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void DrawMoreItemBranchElement(SerializedProperty elementProp, int index)
+    {
+        var branchIdProp  = elementProp.FindPropertyRelative("branchId");
+        var chooseProp    = elementProp.FindPropertyRelative("choose");
+        var buffInfoProp  = elementProp.FindPropertyRelative("buffInfo");
+        var isForAllProp  = elementProp.FindPropertyRelative("isForAllRole");
+        var roleIndexProp = elementProp.FindPropertyRelative("roleIndex");
+        var isEveryProp   = elementProp.FindPropertyRelative("isEveryRound");
+
+        // ── 折叠标题 ──
+        var buffInfo = buffInfoProp.objectReferenceValue as BuffInfo;
+        string buffName = buffInfo != null ? buffInfo.buffName : "未设置";
+        string branchDesc = string.IsNullOrEmpty(branchIdProp.stringValue)
+            ? "无条件"
+            : $"{branchIdProp.stringValue} = {chooseProp.stringValue}";
+        string targetDesc = isForAllProp.boolValue
+            ? "全体友军"
+            : $"角色[{roleIndexProp.intValue}]";
+        string roundDesc = isEveryProp.boolValue ? " (每回合)" : "";
+
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+
+        itemBranchFoldouts[index] = EditorGUILayout.Foldout(
+            itemBranchFoldouts[index],
+            $"Item Branch [{index}] | {branchDesc} → {buffName} → {targetDesc}{roundDesc}",
+            true,
+            EditorStyles.foldoutHeader);
+
+        if (!itemBranchFoldouts[index])
+        {
+            EditorGUILayout.EndVertical();
+            return;
+        }
+
+        EditorGUI.indentLevel++;
+
+        // ── 分支条件 ──
+        EditorGUILayout.LabelField("分支条件", EditorStyles.miniBoldLabel);
+        EditorGUILayout.PropertyField(branchIdProp, new GUIContent("Branch Id"));
+        if (string.IsNullOrEmpty(branchIdProp.stringValue))
+        {
+            EditorGUILayout.HelpBox("Branch Id 为空 → 无条件添加此 Buff", MessageType.Info);
+        }
+        else
+        {
+            EditorGUILayout.PropertyField(chooseProp, new GUIContent("Choose (选择值)"));
+            if (string.IsNullOrEmpty(chooseProp.stringValue))
+            {
+                EditorGUILayout.HelpBox("Choose 为空 → 只要 BranchList 中存在该 Branch Id 即匹配", MessageType.Info);
+            }
+        }
+
+        EditorGUILayout.Space();
+
+        // ── Buff 配置 ──
+        EditorGUILayout.LabelField("Buff 配置", EditorStyles.miniBoldLabel);
+        EditorGUILayout.PropertyField(buffInfoProp, new GUIContent("Buff Info"));
+
+        if (buffInfo != null)
+        {
+            string statLabel = buffInfo.buffType switch
+            {
+                StatType.HP     => "HP",
+                StatType.MAXHP  => "Max HP",
+                StatType.MP     => "MP",
+                StatType.MAXMP  => "Max MP",
+                StatType.ATK    => "ATK",
+                StatType.DEF    => "DEF",
+                StatType.SPD    => "SPD",
+                _               => "?",
+            };
+            if (buffInfo.isPercentage)
+            {
+                int pct = Mathf.RoundToInt(buffInfo.value * 100f);
+                EditorGUILayout.HelpBox($"{statLabel} +{pct}% (按最大值比例)", MessageType.None);
+            }
+            else
+            {
+                string sign = buffInfo.value >= 0 ? "+" : "";
+                EditorGUILayout.HelpBox($"{statLabel} {sign}{buffInfo.value}", MessageType.None);
+            }
+        }
+
+        EditorGUILayout.Space();
+
+        // ── 目标配置 ──
+        EditorGUILayout.LabelField("目标配置", EditorStyles.miniBoldLabel);
+        EditorGUILayout.PropertyField(isForAllProp, new GUIContent("全体友军"));
+
+        if (!isForAllProp.boolValue)
+        {
+            EditorGUILayout.PropertyField(roleIndexProp, new GUIContent("角色索引"));
+        }
+
+        EditorGUILayout.Space();
+
+        // ── 回合配置 ──
+        EditorGUILayout.PropertyField(isEveryProp, new GUIContent("每回合执行"));
+        if (isEveryProp.boolValue)
+        {
+            EditorGUILayout.HelpBox("此 Buff 将在每回合开始时重新应用（如每回合回血效果）", MessageType.Info);
+        }
+
+        EditorGUI.indentLevel--;
+        EditorGUILayout.EndVertical();
     }
 }

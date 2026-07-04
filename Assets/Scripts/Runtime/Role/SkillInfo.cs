@@ -2,6 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 技能目标类型：对敌 or 对队友
+/// </summary>
+public enum SkillTargetType
+{
+    /// <summary>对敌（伤害）</summary>
+    Enemy,
+    /// <summary>对队友（治疗）</summary>
+    Ally
+}
+
 [CreateAssetMenu(fileName = "New Skill", menuName = "Skill")]
 public class SkillInfo : ScriptableObject
 {
@@ -10,15 +21,20 @@ public class SkillInfo : ScriptableObject
     [TextArea(3, 10)]
     public string skillDescription;
     /// <summary>
-    /// 伤害倍率（基于角色攻击力的倍率，如 1.5 表示 150% 攻击力）
+    /// 威力倍率（基于角色攻击力的倍率，如 1.5 表示 150% 攻击力）
+    /// 对敌时为伤害倍率，对队友时为治疗倍率
     /// </summary>
     public float Damage;
     public int mpCost;
     public bool isAOE;
+    /// <summary>
+    /// 技能目标类型：对敌（伤害）或对队友（治疗）
+    /// </summary>
+    public SkillTargetType targetType = SkillTargetType.Enemy;
 
     public bool hasBuff;
     public BuffInfo buff;
-    //TODO:
+    //
     /*
     1. 攻击特效
     2. 受击特效

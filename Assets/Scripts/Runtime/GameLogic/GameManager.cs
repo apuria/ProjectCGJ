@@ -4,6 +4,7 @@ using UnityEngine;
 using UniFramework.Machine;
 using UniFramework.Event;
 using System;
+using UnityEngine.UI;
 
 public enum GameState
 {
@@ -25,7 +26,6 @@ public class GameManager : SingletonMono<GameManager>
     private PlayerData playerData;
 
     public PlayerData PlayerData => playerData;
-    [SerializeField]
     public InGameData inGameData;
 
     public LoadingTexts loadingTexts;
@@ -204,10 +204,14 @@ public class GameManager : SingletonMono<GameManager>
 
     public void LoadSettingData()
     {
-        inGameData.SfxVolume = PlayerPrefs.GetFloat("SoundVolume");
-        inGameData.MusicVolume = PlayerPrefs.GetFloat("MusicVolume");  
-        inGameData.SfxOn = PlayerPrefs.GetInt("SoundMute") == 1;
-        inGameData.MusicOn = PlayerPrefs.GetInt("MusicMute") == 1;
+        if(inGameData == null)
+        {
+            inGameData = new InGameData();
+        }
+        inGameData.SfxVolume = PlayerPrefs.GetFloat("SoundVolume", 0.5f);
+        inGameData.MusicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.5f);  
+        inGameData.SfxOn = PlayerPrefs.GetInt("SoundMute", 1) == 1;
+        inGameData.MusicOn = PlayerPrefs.GetInt("MusicMute", 1) == 1;
     }
 
     public void SaveSettingData()
@@ -290,7 +294,7 @@ public class GameManager : SingletonMono<GameManager>
     /// </summary>
     public void Init()
     {
-        // LoadSettingData();
+        LoadSettingData();
         stateMachine.SwitchTo<GameStart>("GameStart");
     }
 

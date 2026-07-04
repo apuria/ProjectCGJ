@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f22a23b9d98e440478697f4adf30e61c, type: 3}
-  m_Name: UIParticleProjectSettings
+  m_Script: {fileID: 11500000, guid: c4469910d7c8bed4cabdb7954f2f656a, type: 3}
+  m_Name: BuffInfo 1
   m_EditorClassIdentifier: 
-  m_PreLoadSettingsInBuild: 1
-  m_AutoColorCorrection: 1
-  m_DefaultViewSizeForBaking: 10
-  m_HideGeneratedObjects: 1
-  m_PreviewOnSelect: 1
+  buffName: 
+  buffType: 0
+  buffIcon: {fileID: 0}
+  value: 0
+  isPercentage: 0

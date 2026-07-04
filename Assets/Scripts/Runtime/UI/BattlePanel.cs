@@ -16,11 +16,9 @@ public class BattlePanel : BasePanel
 
     public Button btnSetting;
     public Button btnState;
-    public Button btnRetry;
     public Button btnReturn;
     public Button btnQuit;
     public Button btnAttack;
-    public Button btnUltra;
     public Button btnDefend;
     public Button btnSkill;
     public Button btnRun;
@@ -82,7 +80,22 @@ public class BattlePanel : BasePanel
     /// </summary>
     private List<EnemyInfo> currentEnemyList;
 
-    private PoolProxy poolProxy;
+    /// <summary>
+    /// 当前队友列表（用于在队友选择模式下刷新 enemyHpSliders）
+    /// </summary>
+    private List<RoleInfo> currentAllyList;
+
+    /// <summary>
+    /// 防御特效预制体（在 Inspector 中拖入）
+    /// </summary>
+    public GameObject defendEffect;
+
+    public Image EndIcon;
+
+    public Sprite WinIcon;
+    public Sprite LoseIcon;
+
+    private GameObject hurtNumPrefab;
 
 #endregion
 
@@ -98,9 +111,12 @@ public class BattlePanel : BasePanel
         eventGroup.AddListener<BattleEventDefine.BattleEnd>(OnHandleEventMessage);
         eventGroup.AddListener<BattleEventDefine.SelectSkill>(OnHandleEventMessage);
         eventGroup.AddListener<BattleEventDefine.SelectEnemy>(OnHandleEventMessage);
+        eventGroup.AddListener<BattleEventDefine.SelectAlly>(OnHandleEventMessage);
         eventGroup.AddListener<BattleEventDefine.RoleDamageEffect>(OnHandleEventMessage);
         eventGroup.AddListener<BattleEventDefine.EnemyDamageEffect>(OnHandleEventMessage);
+        eventGroup.AddListener<BattleEventDefine.HealEffect>(OnHandleEventMessage);
         eventGroup.AddListener<BattleEventDefine.EnemyActionToast>(OnHandleEventMessage);
+        eventGroup.AddListener<BattleEventDefine.DefendEffect>(OnHandleEventMessage);
         eventGroup.AddListener<BattleEventDefine.RoleHpChange>(OnHandleEventMessage);
         eventGroup.AddListener<BattleEventDefine.RoleMpChange>(OnHandleEventMessage);
         eventGroup.AddListener<BattleEventDefine.EnemyHpChange>(OnHandleEventMessage);
@@ -108,11 +124,11 @@ public class BattlePanel : BasePanel
         // 立即隐藏所有 UI，等正式开战再逐步显示
         btnSetting.gameObject.SetActive(false);
         btnState.gameObject.SetActive(false);
-        btnRetry.gameObject.SetActive(false);
         btnReturn.gameObject.SetActive(false);
         btnQuit.gameObject.SetActive(false);
         if (ActionControll != null) ActionControll.gameObject.SetActive(false);
         btnBattleEnd.gameObject.SetActive(false);
+        if (EndIcon != null) EndIcon.gameObject.SetActive(false);
         battleEndText = btnBattleEnd.GetComponentInChildren<TextMeshProUGUI>();
         if (actionList != null) actionList.gameObject.SetActive(false);
         if (enemyChoose != null) enemyChoose.gameObject.SetActive(false);
@@ -131,7 +147,7 @@ public class BattlePanel : BasePanel
 
         btnBattleEnd.onClick.AddListener(OnClickBattleEnd);
 
-        poolProxy = new PoolProxy(this);
+        hurtNumPrefab = Resources.Load<GameObject>("UI/HurtNum");
 
         // btnSetting 先不配置
 
@@ -141,8 +157,8 @@ public class BattlePanel : BasePanel
             roleState.gameObject.SetActive(!roleState.gameObject.activeSelf);
         });
 
-        // btnRetry: 提示确认是否重新开始战斗
-        btnRetry.onClick.AddListener(() =>
+        // btnRun: 逃跑按钮 → 重新开始战斗（弹出确认对话框）
+        btnRun.onClick.AddListener(() =>
         {
             TipPanelEventDefine.ShowTip.SendEventMessage("确定要重新开始战斗吗？", "确认",
                 () => SceneEventDefine.NodeGame.SendEventMessage(), "取消", null);
@@ -188,19 +204,6 @@ public class BattlePanel : BasePanel
             }
         });
 
-        // btnUltra: 大招 → 非AOE则弹出敌人选择
-        if (btnUltra != null)
-        {
-            btnUltra.onClick.AddListener(() =>
-            {
-                if (currentActingRole?.ultimateSkill != null)
-                {
-                    pendingSkill = currentActingRole.ultimateSkill;
-                    BattleEventDefine.SelectSkill.SendEventMessage(pendingSkill);
-                }
-            });
-        }
-
         // btnSkill: 打开技能选择面板（具体技能由 skillSlot 按钮确定）
         btnSkill.onClick.AddListener(() =>
         {
@@ -214,24 +217,17 @@ public class BattlePanel : BasePanel
             BattleEventDefine.PlayerDefend.SendEventMessage();
         });
 
-        // btnRun: 逃跑 → 直接结束回合（后续可加逃跑逻辑）
-        btnRun.onClick.AddListener(() =>
-        {
-            HideActionButtons();
-            BattleEventDefine.NextTurn.SendEventMessage();
-        });
-
         // 设置异形按钮的 alphaHitTestMinimumThreshold，使透明通道部分不响应射线检测
         SetupAlphaHitThreshold(btnAttack);
         SetupAlphaHitThreshold(btnDefend);
         SetupAlphaHitThreshold(btnSkill);
         SetupAlphaHitThreshold(btnRun);
+
     }
 
     protected void OnDestroy()
     {
         eventGroup.RemoveAllListener();
-        poolProxy?.Dispose();
     }
 #endregion
 
@@ -264,6 +260,31 @@ public class BattlePanel : BasePanel
                 float hpPct = enemy.maxHp.value > 0 ? enemy.hp.value / enemy.maxHp.value : 0f;
                 enemyHpSliders[i].value = hpPct;
                 enemyHpSliders[i].gameObject.SetActive(enemy.hp.value > 0);
+            }
+            else
+            {
+                enemyHpSliders[i].gameObject.SetActive(false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 按 index 顺序刷新队友血量 Slider（在队友选择模式下使用）
+    /// </summary>
+    private void RefreshAllyHpSliders()
+    {
+        if (enemyHpSliders == null || currentAllyList == null) return;
+
+        for (int i = 0; i < enemyHpSliders.Count; i++)
+        {
+            if (enemyHpSliders[i] == null) continue;
+
+            if (i < currentAllyList.Count && currentAllyList[i] != null)
+            {
+                var role = currentAllyList[i];
+                float hpPct = role.maxHp.value > 0 ? role.hp.value / role.maxHp.value : 0f;
+                enemyHpSliders[i].value = hpPct;
+                enemyHpSliders[i].gameObject.SetActive(role.hp.value > 0);
             }
             else
             {
@@ -327,6 +348,10 @@ public class BattlePanel : BasePanel
         {
             HandleSelectEnemy(selectEnemyMsg);
         }
+        else if (message is BattleEventDefine.SelectAlly selectAllyMsg)
+        {
+            HandleSelectAlly(selectAllyMsg);
+        }
         else if (message is BattleEventDefine.RoleDamageEffect roleDmgMsg)
         {
             HandleRoleDamageEffect(roleDmgMsg);
@@ -335,9 +360,17 @@ public class BattlePanel : BasePanel
         {
             HandleEnemyDamageEffect(enemyDmgMsg);
         }
+        else if (message is BattleEventDefine.HealEffect healEffectMsg)
+        {
+            HandleHealEffect(healEffectMsg);
+        }
         else if (message is BattleEventDefine.EnemyActionToast actionToastMsg)
         {
             HandleEnemyActionToast(actionToastMsg);
+        }
+        else if (message is BattleEventDefine.DefendEffect defendEffectMsg)
+        {
+            HandleDefendEffect(defendEffectMsg);
         }
         else if (message is BattleEventDefine.RoleHpChange rhcMsg)
         {
@@ -371,7 +404,6 @@ public class BattlePanel : BasePanel
         // 1. 隐藏所有按钮
         btnSetting.gameObject.SetActive(false);
         btnState.gameObject.SetActive(false);
-        btnRetry.gameObject.SetActive(false);
         btnReturn.gameObject.SetActive(false);
         btnQuit.gameObject.SetActive(false);
         if (ActionControll != null) ActionControll.gameObject.SetActive(false);
@@ -387,6 +419,7 @@ public class BattlePanel : BasePanel
         // 3. 展示角色：按速度排序，第一顺位显示 CloseUp 特写
         if (msg.roleList != null && roles != null)
         {
+            roles.gameObject.SetActive(true);
             var sortedRoles = new List<RoleInfo>(msg.roleList);
             sortedRoles.Sort((a, b) => b.speed.value.CompareTo(a.speed.value));
             roles.UpdateUIWithCloseUp(sortedRoles);
@@ -419,7 +452,6 @@ public class BattlePanel : BasePanel
         // RoleState/Skills/EnemyChoose 默认隐藏，由玩家通过对应按钮手动打开
         btnSetting.gameObject.SetActive(true);
         btnState.gameObject.SetActive(true);
-        btnRetry.gameObject.SetActive(true);
         btnReturn.gameObject.SetActive(true);
         btnQuit.gameObject.SetActive(true);
         if (actionList != null) actionList.gameObject.SetActive(true);
@@ -443,11 +475,14 @@ public class BattlePanel : BasePanel
     /// </summary>
     private void HandlePlayerTurn(BattleEventDefine.UpdateActionSide msg, RoleInfo actingRole)
     {
+        // 0. 停掉所有残留协程（敌方回合的抖动、伤害数字、死亡变黑等延迟特效），
+        //    防止它们在我方操作界面弹出时干扰显示
+        StopAllCoroutines();
+
         currentActingRole = actingRole;
 
-        // 1. 显示所有操作按钮（ActionControll 为按钮父节点），有大招才显示 btnUltra
+        // 1. 显示所有操作按钮（ActionControll 为按钮父节点）
         if (ActionControll != null) ActionControll.gameObject.SetActive(true);
-        if (btnUltra != null) btnUltra.gameObject.SetActive(actingRole.ultimateSkill != null);
 
         // 2. 敌人选择默认隐藏（等选择非AOE技能后再显示）
         if (enemyChoose != null) enemyChoose.gameObject.SetActive(false);
@@ -461,7 +496,11 @@ public class BattlePanel : BasePanel
         RoleInfo firstRole = reorderedRoles.Count > 0 ? reorderedRoles[0] : null;
 
         // 4. 更新角色立绘：第一位用 CloseUp 特写，其他正常
-        if (roles != null) roles.UpdateUIWithCloseUp(reorderedRoles);
+        if (roles != null)
+        {
+            roles.gameObject.SetActive(true);
+            roles.UpdateUIWithCloseUp(reorderedRoles);
+        }
 
         // 5. 更新 HPandMP：显示第一位角色的 HP/MP
         if (firstRole != null && hpadnmp != null)
@@ -472,10 +511,17 @@ public class BattlePanel : BasePanel
         }
 
         // 6. 更新技能列表数据（默认隐藏，玩家点击 btnSkill 时打开）
-        if (skills != null && firstRole != null && firstRole.skills != null && firstRole.skills.Count > 0)
+        //    始终调用 UpdateUI 以清除上一角色的残留技能槽数据
+        if (skills != null)
         {
-            skills.UpdateUI(firstRole.skills);
+            if (firstRole != null && firstRole.skills != null && firstRole.skills.Count > 0)
+                skills.UpdateUI(firstRole.skills);
+            else
+                skills.UpdateUI(new List<SkillInfo>());
         }
+
+        // 6.1 根据当前 MP 刷新攻击/技能按钮的可交互状态（蓝量不足则变灰不可点击）
+        RefreshSkillButtonStates();
 
         // 7. 更新 RoleState：显示除第一位角色外的其他角色状态
         if (roleState != null) roleState.UpdateUI(reorderedRoles);
@@ -541,7 +587,6 @@ public class BattlePanel : BasePanel
         HideActionButtons();
         btnSetting.gameObject.SetActive(false);
         btnState.gameObject.SetActive(false);
-        btnRetry.gameObject.SetActive(false);
         btnReturn.gameObject.SetActive(false);
         btnQuit.gameObject.SetActive(false);
         if (actionList != null) actionList.gameObject.SetActive(false);
@@ -556,7 +601,7 @@ public class BattlePanel : BasePanel
     }
 
     /// <summary>
-    /// 延迟显示战斗结束按钮，并根据胜负设置文字
+    /// 延迟显示战斗结束按钮，并根据胜负设置文字和图标
     /// </summary>
     private IEnumerator ShowBattleEndDelayed()
     {
@@ -565,11 +610,19 @@ public class BattlePanel : BasePanel
         if (battleEndText != null)
             battleEndText.text = battleIsWin ? "胜利" : "失败";
 
+        // 根据胜负显示对应图标
+        if (EndIcon != null)
+        {
+            EndIcon.sprite = battleIsWin ? WinIcon : LoseIcon;
+            EndIcon.gameObject.SetActive(true);
+        }
+
         btnBattleEnd.gameObject.SetActive(true);
     }
 
     /// <summary>
-    /// 选择了技能：如果是AOE直接生效并隐藏操作按钮，否则显示敌人选择界面（同时隐藏操作按钮防止误触）
+    /// 选择了技能：如果是AOE直接生效并隐藏操作按钮；
+    /// 如果是单目标，根据 targetType 显示敌人选择或队友选择界面
     /// </summary>
     private void HandleSelectSkill(BattleEventDefine.SelectSkill msg)
     {
@@ -578,16 +631,32 @@ public class BattlePanel : BasePanel
 
         if (pendingSkill != null && !pendingSkill.isAOE && enemyChoose != null)
         {
-            // 非AOE：隐藏操作按钮（防止误触防御/逃跑/再次攻击），显示敌人选择界面
+            // 非AOE：隐藏操作按钮（防止误触防御/逃跑/再次攻击），根据目标类型显示对应选择面板
             if (ActionControll != null) ActionControll.gameObject.SetActive(false);
-            enemyChoose.gameObject.SetActive(true);
+
+            if (pendingSkill.targetType == SkillTargetType.Ally)
+            {
+                // 对队友技能：显示队友选择面板（含自身），并刷新血量条为队友血量
+                currentAllyList = currentOriginalRoles;
+                enemyChoose.UpdateUIForAllies(currentOriginalRoles);
+                RefreshAllyHpSliders();
+                enemyChoose.gameObject.SetActive(true);
+            }
+            else
+            {
+                // 对敌技能：先刷新敌人数据再显示（防止之前被 UpdateUIForAllies 覆盖）
+                if (currentEnemyList != null)
+                    enemyChoose.UpdateUI(currentEnemyList);
+                RefreshEnemyHpSliders();
+                enemyChoose.gameObject.SetActive(true);
+            }
         }
         else if (pendingSkill != null && pendingSkill.isAOE)
         {
-            // AOE：无需选择敌人，直接隐藏操作按钮防止重复点击
+            // AOE：无需选择目标，直接隐藏操作按钮防止重复点击
             HideActionButtons();
         }
-        // 如果非AOE但 enemyChoose 为 null：pendingSkill 已设置但无法选敌，
+        // 如果非AOE但 enemyChoose 为 null：pendingSkill 已设置但无法选目标，
         // 此处不隐藏按钮，让玩家仍可点防御/逃跑来推进回合（由 PlayerBattleState 层兜底）
     }
 
@@ -601,6 +670,93 @@ public class BattlePanel : BasePanel
     }
 
     /// <summary>
+    /// 选择了队友目标：隐藏选择界面和操作按钮（治疗和 NextTurn 由 PlayerBattleState 处理）
+    /// </summary>
+    private void HandleSelectAlly(BattleEventDefine.SelectAlly msg)
+    {
+        HideActionButtons();
+        pendingSkill = null;
+    }
+
+    /// <summary>
+    /// 治疗特效：在施法者和目标身上播放特效，显示绿色治疗数字
+    /// </summary>
+    private void HandleHealEffect(BattleEventDefine.HealEffect msg)
+    {
+        // 施法特效：放在施法者的 VFXPoint 上，立即播放
+        if (msg.attackEffect != null)
+        {
+            Transform casterVfx = GetVFXPoint(msg.casterIsPlayer, msg.casterIdx);
+            if (casterVfx != null)
+                SpawnEffect(msg.attackEffect, casterVfx);
+        }
+
+        // 受击特效 + 治疗数字：放在目标的 VFXPoint 上，延迟播放
+        Transform targetVfx = GetVFXPoint(msg.targetIsPlayer, msg.targetIdx);
+        if (targetVfx != null)
+        {
+            StartCoroutine(DelayedSpawnHealEffectAndHurtNum(targetVfx, msg.healValue, msg.hitEffect));
+        }
+    }
+
+    /// <summary>
+    /// 根据阵营和索引获取对应 VFXPoint
+    /// </summary>
+    private Transform GetVFXPoint(bool isPlayer, int idx)
+    {
+        if (isPlayer)
+        {
+            if (roles == null) return null;
+            if (currentDisplayRoles == null || currentOriginalRoles == null) return null;
+            if (idx < 0 || idx >= currentOriginalRoles.Count) return null;
+            RoleInfo targetRole = currentOriginalRoles[idx];
+            int slotIdx = currentDisplayRoles.IndexOf(targetRole);
+            if (slotIdx < 0 || slotIdx >= roles.roleSlots.Count) return null;
+            var slot = roles.roleSlots[slotIdx];
+            if (slot == null || !slot.gameObject.activeSelf) return null;
+            return slot.VFXPoint;
+        }
+        else
+        {
+            if (enemies == null) return null;
+            if (idx < 0 || idx >= enemies.enemySlots.Count) return null;
+            var slot = enemies.enemySlots[idx];
+            if (slot == null || !slot.gameObject.activeSelf) return null;
+            return slot.VFXPoint;
+        }
+    }
+
+    /// <summary>
+    /// 延迟生成治疗受击特效（与治疗数字同时播放）
+    /// </summary>
+    private IEnumerator DelayedSpawnHealEffectAndHurtNum(Transform vfxPoint, int healValue,
+        GameObject hitEffectPrefab)
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        // 受击特效：有则播，无则跳过
+        if (hitEffectPrefab != null)
+        {
+            SpawnEffect(hitEffectPrefab, vfxPoint);
+        }
+
+        SpawnHealNum(vfxPoint, healValue);
+    }
+
+    /// <summary>
+    /// 生成治疗数字（绿色）
+    /// </summary>
+    private void SpawnHealNum(Transform vfxPoint, int healValue)
+    {
+        if (hurtNumPrefab == null) return;
+        GameObject go = Instantiate(hurtNumPrefab, transform);
+        go.transform.position = vfxPoint.position;
+        var hurtNum = go.GetComponent<HurtNum>();
+        if (hurtNum != null)
+            hurtNum.SetupHeal(healValue);
+    }
+
+    /// <summary>
     /// 刷新当前行动角色的 HP/MP 条
     /// </summary>
     private void RefreshHPandMP()
@@ -609,6 +765,34 @@ public class BattlePanel : BasePanel
         float hpPct = currentActingRole.maxHp.value > 0 ? currentActingRole.hp.value / currentActingRole.maxHp.value : 0f;
         float mpPct = currentActingRole.maxMp.value > 0 ? currentActingRole.mp.value / currentActingRole.maxMp.value : 0f;
         hpadnmp.UpdateUI(hpPct, mpPct);
+
+        // MP 变化后同步刷新攻击/技能按钮的可点击状态
+        RefreshSkillButtonStates();
+    }
+
+    /// <summary>
+    /// 根据当前角色的 MP 值，刷新攻击按钮和技能槽的可交互状态。
+    /// 蓝量不足以支付 mpCost 的按钮会被设为不可交互（变灰 + 不响应射线）。
+    /// 蓝量回复后，足够蓝量的技能/攻击按钮恢复可点击。
+    /// </summary>
+    private void RefreshSkillButtonStates()
+    {
+        if (currentActingRole == null) return;
+        int currentMp = (int)currentActingRole.mp.value;
+
+        // 刷新普通攻击按钮：无普通攻击或蓝量不足时置灰不可点击
+        if (btnAttack != null)
+        {
+            bool canAttack = currentActingRole.normalAttack != null
+                             && currentMp >= currentActingRole.normalAttack.mpCost;
+            btnAttack.interactable = canAttack;
+        }
+
+        // 刷新技能选择面板中的技能槽
+        if (skills != null)
+        {
+            skills.RefreshInteractable(currentMp);
+        }
     }
 
     /// <summary>
@@ -640,21 +824,24 @@ public class BattlePanel : BasePanel
             }
         }
 
-        StartCoroutine(ShakeCoroutine(slot.icon.rectTransform));
-        if (msg.isDead)
-        {
-            slot.icon.color = new Color(0.2f, 0.2f, 0.2f);
-        }
-
         // 受击特效：放在受击方（对应玩家）的 VFXPoint 上，延迟与伤害数字同时播放
+        // 立绘 role1 和 role2 受击时 scale * 0.6，role0 保持原 scale
+        float hitScale = (msg.idx == 1 || msg.idx == 2) ? 0.6f : 1f;
         StartCoroutine(DelayedSpawnHitEffectAndHurtNum(slot.VFXPoint, msg.hurtValue,
-            msg.hitEffect));
+            msg.hitEffect, hitScale));
+
+        // 立绘抖动延迟与受击特效同步
+        StartCoroutine(DelayedShakeCoroutine(slot.icon.rectTransform));
+
+        // 死亡变黑延迟与受击特效同步
+        if (msg.isDead)
+            StartCoroutine(DelayedDeathDarken(slot.icon));
     }
 
     /// <summary>
     /// 敌人受伤效果（我方攻击 → 敌方受击）：立绘抖动；死亡时变黑
-    /// 攻击特效放在攻击方（第一个玩家）VFXPoint → 立即播放
-    /// 受击特效放在受击方（第一个敌人）VFXPoint → 延迟与伤害数字同时播放
+    /// 攻击特效放在攻击方（对应玩家角色）VFXPoint → 立即播放
+    /// 受击特效放在受击方（对应被击中敌人）VFXPoint → 延迟与伤害数字同时播放
     /// </summary>
     private void HandleEnemyDamageEffect(BattleEventDefine.EnemyDamageEffect msg)
     {
@@ -664,29 +851,29 @@ public class BattlePanel : BasePanel
             var slot = enemies.enemySlots[msg.idx];
             if (slot == null || !slot.gameObject.activeSelf) return;
 
-            // 攻击特效：放在攻击方（第一个玩家）的 VFXPoint 上，立即播放
-            if (msg.attackEffect != null && roles != null && roles.roleSlots.Count > 0)
+            // 攻击特效：放在攻击方（对应玩家角色）的 VFXPoint 上，立即播放
+            if (msg.attackEffect != null && roles != null
+                && msg.attackerIdx >= 0 && msg.attackerIdx < roles.roleSlots.Count)
             {
-                var attackerSlot = roles.roleSlots[0];
+                var attackerSlot = roles.roleSlots[msg.attackerIdx];
                 if (attackerSlot != null && attackerSlot.gameObject.activeSelf)
                 {
                     SpawnEffect(msg.attackEffect, attackerSlot.VFXPoint);
                 }
             }
 
-            // 立绘抖动：抖动被击中的敌人（而非一定第一个）
-            StartCoroutine(ShakeCoroutine(slot.icon.rectTransform));
-            if (msg.isDead)
-            {
-                slot.icon.color = new Color(0.2f, 0.2f, 0.2f);
-            }
-
-            // 受击特效：放在第一个敌人的 VFXPoint 上，延迟与伤害数字同时播放
-            Transform hitVfxPoint = enemies.enemySlots.Count > 0
-                ? enemies.enemySlots[0].VFXPoint
-                : slot.VFXPoint;
+            // 受击特效：放在对应被击中敌人的 VFXPoint 上，延迟与伤害数字同时播放
+            // 敌人受击特效保持原 scale
+            Transform hitVfxPoint = slot.VFXPoint;
             StartCoroutine(DelayedSpawnHitEffectAndHurtNum(hitVfxPoint, msg.hurtValue,
-                msg.hitEffect));
+                msg.hitEffect, 1f));
+
+            // 立绘抖动延迟与受击特效同步
+            StartCoroutine(DelayedShakeCoroutine(slot.icon.rectTransform));
+
+            // 死亡变黑延迟与受击特效同步
+            if (msg.isDead)
+                StartCoroutine(DelayedDeathDarken(slot.icon));
         }
     }
 
@@ -702,17 +889,51 @@ public class BattlePanel : BasePanel
     }
 
     /// <summary>
+    /// 防御特效：在防御者（玩家角色或敌人）的 VFXPoint 上生成防御特效
+    /// </summary>
+    private void HandleDefendEffect(BattleEventDefine.DefendEffect msg)
+    {
+        if (defendEffect == null) return;
+
+        if (msg.isPlayer)
+        {
+            // 玩家角色防御特效：idx 是 roleList 中的原始索引，需映射到显示 slot
+            if (currentOriginalRoles == null || currentDisplayRoles == null) return;
+            if (msg.idx < 0 || msg.idx >= currentOriginalRoles.Count) return;
+
+            RoleInfo defendRole = currentOriginalRoles[msg.idx];
+            int slotIdx = currentDisplayRoles.IndexOf(defendRole);
+            if (slotIdx < 0 || slotIdx >= roles.roleSlots.Count) return;
+
+            var slot = roles.roleSlots[slotIdx];
+            if (slot != null && slot.gameObject.activeSelf)
+                SpawnEffect(defendEffect, slot.VFXPoint);
+        }
+        else
+        {
+            // 敌人防御特效：idx 直接对应 enemySlots 索引
+            if (enemies == null) return;
+            if (msg.idx < 0 || msg.idx >= enemies.enemySlots.Count) return;
+
+            var slot = enemies.enemySlots[msg.idx];
+            if (slot != null && slot.gameObject.activeSelf)
+                SpawnEffect(defendEffect, slot.VFXPoint);
+        }
+    }
+
+    /// <summary>
     /// 延迟生成受击特效（与伤害数字同时播放）
     /// </summary>
+    /// <param name="scaleMultiplier">受击特效缩放倍率（role1/role2 为 0.6，其余为 1）</param>
     private IEnumerator DelayedSpawnHitEffectAndHurtNum(Transform vfxPoint, int damage,
-        GameObject hitEffectPrefab)
+        GameObject hitEffectPrefab, float scaleMultiplier = 1f)
     {
         yield return new WaitForSeconds(0.5f);
 
         // 受击特效：有则播，无则跳过
         if (hitEffectPrefab != null)
         {
-            SpawnEffect(hitEffectPrefab, vfxPoint);
+            SpawnEffect(hitEffectPrefab, vfxPoint, scaleMultiplier);
         }
 
         SpawnHurtNum(vfxPoint, damage);
@@ -720,13 +941,11 @@ public class BattlePanel : BasePanel
 
     private void SpawnHurtNum(Transform vfxPoint, int damage)
     {
-        GameObject go = poolProxy.Get("UI/HurtNum");
-        if (go == null) return;
-
-        go.transform.SetParent(transform, false);
+        if (hurtNumPrefab == null) return;
+        GameObject go = Instantiate(hurtNumPrefab, transform);
         go.transform.position = vfxPoint.position;
         go.GetComponent<HurtNum>().Setup(damage);
-        // GetObj 已激活，OnEnable 自动开始动画
+        // OnEnable 自动开始动画
     }
 
     /// <summary>
@@ -734,7 +953,8 @@ public class BattlePanel : BasePanel
     /// </summary>
     /// <param name="effectPrefab">特效预制体（null 则跳过）</param>
     /// <param name="vfxPoint">生成位置锚点</param>
-    private void SpawnEffect(GameObject effectPrefab, Transform vfxPoint)
+    /// <param name="scaleMultiplier">缩放倍率（默认 1）</param>
+    private void SpawnEffect(GameObject effectPrefab, Transform vfxPoint, float scaleMultiplier = 1f)
     {
         if (effectPrefab == null || vfxPoint == null) return;
 
@@ -743,6 +963,7 @@ public class BattlePanel : BasePanel
         GameObject eff = Instantiate(effectPrefab);
         eff.transform.SetParent(transform, false);
         eff.transform.position = vfxPoint.position;
+        eff.transform.localScale *= scaleMultiplier;
 
         // EffectController 在 OnEnable 中自动播放粒子系统，播放完毕后自动归还对象池
         // 若对象池中无对应抽屉，则直接 Destroy
@@ -767,6 +988,24 @@ public class BattlePanel : BasePanel
             yield return null;
         }
         target.localPosition = originPos;
+    }
+
+    /// <summary>
+    /// 延迟立绘抖动协程（与受击特效同步播放）
+    /// </summary>
+    private IEnumerator DelayedShakeCoroutine(RectTransform target)
+    {
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(ShakeCoroutine(target));
+    }
+
+    /// <summary>
+    /// 延迟死亡变黑协程（与受击特效同步播放）
+    /// </summary>
+    private IEnumerator DelayedDeathDarken(Image icon)
+    {
+        yield return new WaitForSeconds(0.5f);
+        icon.color = new Color(0.2f, 0.2f, 0.2f);
     }
 
     /// <summary>

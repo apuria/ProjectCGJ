@@ -184,8 +184,8 @@ MonoBehaviour:
     rightSpeakerIndex: 1
     talkingSpeaker: 1
     text: "\u5C31\u8FD9\u6837\u54AF\uFF0C886"
-    onEnd: 5
+    onEnd: 3
     Battle: {fileID: 0}
-    Branch: {fileID: 0}
+    Branch: {fileID: 11400000, guid: 3db1b2d6ef3a3424b9f019bd2f2d1854, type: 2}
     NextLog: {fileID: 0}
     End: {fileID: 0}

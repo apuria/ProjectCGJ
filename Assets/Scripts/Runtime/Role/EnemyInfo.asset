@@ -30,7 +30,7 @@ MonoBehaviour:
     value: 10
   skills:
   - {fileID: 11400000, guid: a3117dbeefe04684780b2cf418b797d3, type: 2}
-  - {fileID: 11400000, guid: a3117dbeefe04684780b2cf418b797d3, type: 2}
+  - {fileID: 11400000, guid: a20c4dfaf2e57904eaaad00ab51193e9, type: 2}
   ultimateSkill: {fileID: 11400000, guid: a3117dbeefe04684780b2cf418b797d3, type: 2}
   normalAttack: {fileID: 11400000, guid: a3117dbeefe04684780b2cf418b797d3, type: 2}
   shieldValue:

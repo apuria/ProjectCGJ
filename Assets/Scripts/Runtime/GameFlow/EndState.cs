@@ -23,6 +23,20 @@ public class EndState : BaseState
 
     private EndSetting endSetting;
 
+    /// <summary>
+    /// 延迟切换标志：由于 OnEnter 在 ChangeState 事件广播链内被同步调用，
+    /// 此时再发送 ChangeState 会触发递归保护。因此将状态切换延迟到 OnUpdate 执行。
+    /// </summary>
+    private enum DeferredAction
+    {
+        None,
+        ExecuteBranch,
+        GoToMainMenu
+    }
+
+    private DeferredAction deferredAction = DeferredAction.None;
+    private EndBranch deferredBranch;
+
     public override void OnCreate(StateMachine machine, IStateData data)
     {
         base.OnCreate(machine, data);
@@ -34,7 +48,7 @@ public class EndState : BaseState
         if (endSetting == null || endSetting.endBranches == null || endSetting.endBranches.Count == 0)
         {
             Debug.LogWarning("EndState.OnEnter: EndSetting 为空或没有配置 endBranches，返回主菜单");
-            GoToMainMenu();
+            deferredAction = DeferredAction.GoToMainMenu;
             return;
         }
 
@@ -55,21 +69,23 @@ public class EndState : BaseState
             // 条件检查：branches 为空则直接执行
             if (endBranch.branches == null || endBranch.branches.Count == 0)
             {
-                ExecuteEndBranch(endBranch);
+                deferredBranch = endBranch;
+                deferredAction = DeferredAction.ExecuteBranch;
                 return;
             }
 
             // 检查所有条件是否满足
             if (CheckAllBranches(endBranch.branches, branchList))
             {
-                ExecuteEndBranch(endBranch);
+                deferredBranch = endBranch;
+                deferredAction = DeferredAction.ExecuteBranch;
                 return;
             }
         }
 
         // 没有匹配的 endBranch，返回主菜单并清理所有挂起状态
         Debug.LogWarning("EndState: 没有匹配的 endBranch，返回主菜单");
-        GoToMainMenu();
+        deferredAction = DeferredAction.GoToMainMenu;
     }
 
     /// <summary>
@@ -78,6 +94,9 @@ public class EndState : BaseState
     /// </summary>
     private bool CheckAllBranches(List<EndBranchSlot> conditions, Dictionary<string, string> branchList)
     {
+        // branchList 为 null 时（PlayerData 未初始化），任何条件都无法满足
+        if (branchList == null) return false;
+
         foreach (var condition in conditions)
         {
             if (condition == null) continue;
@@ -119,16 +138,31 @@ public class EndState : BaseState
 
     public override void OnExit()
     {
-
+        // 如果在 OnUpdate 执行延迟操作前就退出了，重置延迟状态
+        deferredAction = DeferredAction.None;
+        deferredBranch = null;
     }
 
     public override void OnUpdate()
     {
-
+        switch (deferredAction)
+        {
+            case DeferredAction.ExecuteBranch:
+                deferredAction = DeferredAction.None;
+                ExecuteEndBranch(deferredBranch);
+                deferredBranch = null;
+                break;
+            case DeferredAction.GoToMainMenu:
+                deferredAction = DeferredAction.None;
+                GoToMainMenu();
+                break;
+        }
     }
 
     public override void OnDispose()
     {
+        deferredAction = DeferredAction.None;
+        deferredBranch = null;
         base.OnDispose();
     }
 

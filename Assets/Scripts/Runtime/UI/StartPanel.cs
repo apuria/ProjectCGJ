@@ -18,6 +18,9 @@ public class StartPanel : BasePanel
     public Button btnStart;
     public Button btnNewGame;
 
+    public Button btnSetting;
+    
+    public SettingPanel settingPanel;
 #endregion
 
 #region 生命周期
@@ -45,6 +48,11 @@ public class StartPanel : BasePanel
             {
                 GameEventDefine.NewGame.SendEventMessage();
             }, "取消", null);
+        });
+        btnSetting.onClick.AddListener(() =>
+        {
+            settingPanel.gameObject.SetActive(true);
+            settingPanel.ShowMe();
         });
     }
 

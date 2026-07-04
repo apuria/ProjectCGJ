@@ -18,7 +18,8 @@ MonoBehaviour:
   Damage: 1
   mpCost: 0
   isAOE: 0
+  targetType: 0
   hasBuff: 1
   buff: {fileID: 0}
   attackEffect: {fileID: 0}
-  hitEffect: {fileID: 0}
+  hitEffect: {fileID: 8351583881227030724, guid: 17a151dbdcd1cc84abc756aa6f7147eb, type: 3}

@@ -21,7 +21,10 @@ MonoBehaviour:
   - name: 1231
     CharaArtwork: {fileID: 21300000, guid: 273188e39e858be4b94ae2f0d72cda04, type: 3}
   dialogues:
-  - leftSpeakerIndex: 0
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 1
+    leftSpeakerIndex: 0
     rightSpeakerIndex: 1
     talkingSpeaker: 0
     text: "\u6D4B\u8BD52\n"
@@ -30,7 +33,10 @@ MonoBehaviour:
     Branch: {fileID: 0}
     NextLog: {fileID: 0}
     End: {fileID: 0}
-  - leftSpeakerIndex: 0
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 1
+    leftSpeakerIndex: 0
     rightSpeakerIndex: 1
     talkingSpeaker: 1
     text: 1231231231
@@ -39,11 +45,14 @@ MonoBehaviour:
     Branch: {fileID: 0}
     NextLog: {fileID: 0}
     End: {fileID: 0}
-  - leftSpeakerIndex: 0
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 1
+    leftSpeakerIndex: 0
     rightSpeakerIndex: 1
     talkingSpeaker: 0
     text: 31123
-    onEnd: 4
+    onEnd: 8
     Battle: {fileID: 0}
     Branch: {fileID: 0}
     NextLog: {fileID: 0}

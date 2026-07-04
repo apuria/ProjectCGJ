@@ -126,10 +126,16 @@ public class MoreRoleBranch
     public string choose;
 }
 
+[Serializable]
 public class MoreItemBranch
 {
-    public int roleIndex;
+    
     public string branchId;
     public string choose;
+    public BuffInfo buffInfo;
+
+    public bool isForAllRole;
+    public int roleIndex;
+    public bool isEveryRound;
 }
 

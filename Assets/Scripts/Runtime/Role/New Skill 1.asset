@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdfcedb139d87b0479287f98e779df5e, type: 3}
+  m_Name: New Skill 1
+  m_EditorClassIdentifier: 
+  skillName: "\u95EA\u7535\u65CB\u98CE\u5288"
+  skillIcon: {fileID: 1621858650, guid: e6414e0329a61c943bf0b4b953eb8c2a, type: 3}
+  skillDescription: 
+  Damage: 2
+  mpCost: 50
+  isAOE: 0
+  targetType: 1
+  hasBuff: 0
+  buff: {fileID: 0}
+  attackEffect: {fileID: 0}
+  hitEffect: {fileID: 3106680952780310086, guid: 230234f890125b24496e0a9947060870, type: 3}

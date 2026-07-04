@@ -205,25 +205,25 @@ MonoBehaviour:
   gameNodes:
   - nodeName: Node 1
     stateType: 0
-    icon: {fileID: 0}
+    icon: {fileID: -441503911, guid: ff75803f119264343b956b866c7e505d, type: 3}
     battleSetting: {fileID: 11400000, guid: 9a6a6be7223ec9c46a7a6b95f9789841, type: 2}
     dialogueSetting: {fileID: 0}
     branchSetting: {fileID: 0}
   - nodeName: Node 2
     stateType: 1
-    icon: {fileID: 0}
+    icon: {fileID: -441503911, guid: ff75803f119264343b956b866c7e505d, type: 3}
     battleSetting: {fileID: 0}
     dialogueSetting: {fileID: 11400000, guid: 79bf98b3aeccbe9499633a005a4d0073, type: 2}
     branchSetting: {fileID: 0}
   - nodeName: Node 3
     stateType: 1
-    icon: {fileID: 0}
+    icon: {fileID: -441503911, guid: ff75803f119264343b956b866c7e505d, type: 3}
     battleSetting: {fileID: 0}
     dialogueSetting: {fileID: 11400000, guid: 79bf98b3aeccbe9499633a005a4d0073, type: 2}
     branchSetting: {fileID: 0}
   - nodeName: Node 4
     stateType: 1
-    icon: {fileID: 0}
+    icon: {fileID: 2143177767, guid: ff75803f119264343b956b866c7e505d, type: 3}
     battleSetting: {fileID: 0}
     dialogueSetting: {fileID: 11400000, guid: 79bf98b3aeccbe9499633a005a4d0073, type: 2}
     branchSetting: {fileID: 0}

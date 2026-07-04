@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UniFramework.Machine;
 
 [Serializable]
 public class EndBranchSlot
 {
     [Tooltip("匹配 PlayerData.branchList 的 key")]
+    [FormerlySerializedAs("text")]
     public string index;
     [Tooltip("匹配 PlayerData.branchList 的 value（为空则只检查 key 是否存在）")]
     public string chosen;

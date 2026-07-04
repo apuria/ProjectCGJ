@@ -65,6 +65,23 @@ public class BattleState : BaseState
     private HashSet<int> triggeredMidEventIndices = new();
 
     /// <summary>
+    /// 每回合都需要执行的 buff 分支列表（isEveryRound = true 的 MoreItemBranch）
+    /// </summary>
+    private List<MoreItemBranch> everyRoundBuffs = new();
+
+    /// <summary>
+    /// 角色初始属性快照，用于百分比 buff 计算的基础参考值（避免每回合叠加时复合膨胀）
+    /// </summary>
+    private struct InitialStatSnapshot
+    {
+        public float attack;
+        public float shieldValue;
+        public float speed;
+    }
+
+    private Dictionary<RoleInfo, InitialStatSnapshot> roleInitialStats = new();
+
+    /// <summary>
     /// 敌方行动后等待特效播放的计时器
     /// </summary>
     private float turnDelay = 0f;
@@ -146,7 +163,12 @@ public class BattleState : BaseState
             if (loadDelay <= 0f)
             {
                 isLoadPhase = false;
-                NextRound();
+                // 仅当回合队列为空时才初始化新回合（首次进入）
+                // 从对话/分支恢复时队列中仍有未完成的行动者，直接调用 StartTurn 继续
+                if (roundQueue.Count == 0)
+                {
+                    NextRound();
+                }
                 StartTurn();
             }
         }
@@ -287,11 +309,20 @@ public class BattleState : BaseState
         }
         else if(message is BattleEventDefine.EnemyActionDelay delayMsg)
         {
-            // 已在等待中则忽略后续延迟请求，防止双击等重复触发
-            if (!isBattleEnded && !isWaitingTurnDelay)
+            if (!isBattleEnded)
             {
-                isWaitingTurnDelay = true;
-                turnDelay = delayMsg.delay;
+                if (!isWaitingTurnDelay)
+                {
+                    isWaitingTurnDelay = true;
+                    turnDelay = delayMsg.delay;
+                }
+                else
+                {
+                    // 已有延迟在等待中：取较大值，确保当前特效有足够时间播放
+                    // 防止多个 EnemeyActionDelay 同时到达时回合过早推进
+                    if (delayMsg.delay > turnDelay)
+                        turnDelay = delayMsg.delay;
+                }
             }
         }
     }
@@ -310,35 +341,116 @@ public class BattleState : BaseState
         2. 记录本次战斗的敌人列表
         3. UI更新战斗信息
         */
+
+        // 清空每回合 buff 列表，防止重复 InitBattle 调用导致累积
+        everyRoundBuffs.Clear();
+
         foreach (var enemy in battleSetting.enemies)
         {
+            if (enemy == null) continue;
             var instance = Object.Instantiate(enemy);
             EnsureStatDefaults(instance);
             enemyList.Add(instance);
         }
 
-        var mainRoleInst = Object.Instantiate(GameManager.Instance.mainRole);
-        EnsureStatDefaults(mainRoleInst);
-        roleList.Add(mainRoleInst);
-        foreach(var roleBranch in battleSetting.moreRoleBranches)
+        if (GameManager.Instance.mainRole != null)
         {
-            var branches = GameManager.Instance.PlayerData.branchList;
-            bool hasKey = branches.ContainsKey(roleBranch.branchId);
-            string branchVal = hasKey ? branches[roleBranch.branchId] : null;
+            var mainRoleInst = Object.Instantiate(GameManager.Instance.mainRole);
+            EnsureStatDefaults(mainRoleInst);
+            roleList.Add(mainRoleInst);
+        }
+        else
+        {
+            Debug.LogError("BattleState.InitBattle: GameManager.Instance.mainRole 未配置！请在 GameManager 上拖入主角 RoleInfo 资产。");
+        }
 
-            // 两个都为空直接添加，否则按选择值匹配
-            if (string.IsNullOrEmpty(branchVal) && string.IsNullOrEmpty(roleBranch.choose))
+        var playerData = GameManager.Instance.PlayerData;
+        var branchList = playerData?.branchList;
+
+        if (playerData == null)
+        {
+            Debug.LogError("BattleState.InitBattle: PlayerData 未初始化，无法处理多角色分支。");
+        }
+        else
+        {
+            foreach(var roleBranch in battleSetting.moreRoleBranches)
             {
-                var inst = Object.Instantiate(GameManager.Instance.roleList[roleBranch.roleIndex]);
-                EnsureStatDefaults(inst);
-                roleList.Add(inst);
+                if (roleBranch == null) continue;
+
+                var branches = playerData.branchList;
+                bool hasKey = branches.ContainsKey(roleBranch.branchId);
+                string branchVal = hasKey ? branches[roleBranch.branchId] : null;
+
+                // 边界检查 roleIndex
+                if (roleBranch.roleIndex < 0 || roleBranch.roleIndex >= GameManager.Instance.roleList.Count)
+                {
+                    Debug.LogError($"BattleState.InitBattle: moreRoleBranches 的 roleIndex={roleBranch.roleIndex} 越界，GameManager.roleList 只有 {GameManager.Instance.roleList.Count} 个元素。");
+                    continue;
+                }
+
+                var roleAsset = GameManager.Instance.roleList[roleBranch.roleIndex];
+                if (roleAsset == null)
+                {
+                    Debug.LogError($"BattleState.InitBattle: GameManager.roleList[{roleBranch.roleIndex}] 为 null。");
+                    continue;
+                }
+
+                // 两个都为空直接添加，否则按选择值匹配
+                if (string.IsNullOrEmpty(branchVal) && string.IsNullOrEmpty(roleBranch.choose))
+                {
+                    var inst = Object.Instantiate(roleAsset);
+                    EnsureStatDefaults(inst);
+                    roleList.Add(inst);
+                }
+                else if (hasKey && branchVal == roleBranch.choose)
+                {
+                    var inst = Object.Instantiate(roleAsset);
+                    EnsureStatDefaults(inst);
+                    roleList.Add(inst);
+                }
             }
-            else if (hasKey && branchVal == roleBranch.choose)
+        }
+
+        // === 快照角色初始属性，用于百分比 buff 计算 ===
+        // 在应用任何 buff 之前保存，避免每回合叠加时基于已被修改的值计算导致复合膨胀
+        foreach (var role in roleList)
+        {
+            if (role != null && !roleInitialStats.ContainsKey(role))
             {
-                var inst = Object.Instantiate(GameManager.Instance.roleList[roleBranch.roleIndex]);
-                EnsureStatDefaults(inst);
-                roleList.Add(inst);
+                roleInitialStats[role] = new InitialStatSnapshot
+                {
+                    attack      = role.attack.value,
+                    shieldValue = role.shieldValue.value,
+                    speed       = role.speed.value,
+                };
             }
+        }
+
+        // === 处理道具分支（moreItemBranches）：根据分支选择为角色添加 Buff ===
+        // 放在 else 外面，因为无条件 buff（branchId 为空）即使 PlayerData 为 null 也应生效
+        foreach (var itemBranch in battleSetting.moreItemBranches)
+        {
+            if (itemBranch == null || itemBranch.buffInfo == null) continue;
+
+            if (!IsItemBranchMatch(itemBranch, branchList)) continue;
+
+            if (itemBranch.isEveryRound)
+            {
+                // 每回合 buff：只注册到列表，不立即应用。
+                // 统一由 NextRound() → ApplyEveryRoundBuffs() 负责每回合应用，
+                // 避免 InitBattle 立即应用 + 首次 NextRound 再次应用导致重复。
+                everyRoundBuffs.Add(itemBranch);
+            }
+            else
+            {
+                // 非每回合 buff：仅在战斗初始化时应用一次，持续生效
+                ApplyMoreItemBranchBuff(itemBranch);
+            }
+        }
+
+        if (roleList.Count == 0)
+        {
+            Debug.LogError("BattleState.InitBattle: 没有成功加载任何角色！请检查 GameManager 的 mainRole 和 roleList 配置，以及 BattleSetting 的 moreRoleBranches。");
         }
 
         // 重置敌方 AI 概率
@@ -365,7 +477,7 @@ public class BattleState : BaseState
     }
 
     /// <summary>
-    /// 开始当前顺位的行动（Peek，不 Dequeue），自动跳过已死亡的行动者
+    /// 开始当前顺位的行动（Peek，不 Dequeue），自动清理所有已死亡的行动者
     /// </summary>
     private void StartTurn()
     {
@@ -383,22 +495,12 @@ public class BattleState : BaseState
                 NextRound();
             }
 
-            // 跳过本回合内已死亡的行动者
-            bool skippedDead = false;
-            while (roundQueue.Count > 0)
+            // 清理队列中所有已死亡的角色/敌人（包括非队首位置的中途死亡者）
+            int beforeCount = roundQueue.Count;
+            PurgeDeadFromQueue();
+            if (roundQueue.Count != beforeCount)
             {
-                BaseInfo info = roundQueue.Peek();
-                bool isDead = (info is RoleInfo r && r.hp.value <= 0) ||
-                              (info is EnemyInfo e && e.hp.value <= 0);
-                if (!isDead)
-                    break;
-                roundQueue.Dequeue();
-                skippedDead = true;
-            }
-
-            // 有死者被跳过 → 更新完整队列（UI 不再显示死者）
-            if (skippedDead)
-            {
+                // 有死者被清除 → 更新完整队列（UI 不再显示死者）
                 currentFullQueue = new List<BaseInfo>(roundQueue);
             }
 
@@ -437,10 +539,30 @@ public class BattleState : BaseState
         if (roundQueue.Count > 0)
             roundQueue.Dequeue();
 
+        // 清理队列中在本回合内死亡的角色/敌人
+        PurgeDeadFromQueue();
+
         // 同步更新完整队列，确保传给下一个 BattleState 的 actionQueue 反映当前状态
         currentFullQueue = new List<BaseInfo>(roundQueue);
 
         StartTurn();
+    }
+
+    /// <summary>
+    /// 从回合队列中移除所有已死亡的角色/敌人（本回合中途有单位死亡时清理队列）
+    /// </summary>
+    private void PurgeDeadFromQueue()
+    {
+        var alive = new Queue<BaseInfo>();
+        while (roundQueue.Count > 0)
+        {
+            var info = roundQueue.Dequeue();
+            bool isDead = (info is RoleInfo r && r.hp.value <= 0) ||
+                          (info is EnemyInfo e && e.hp.value <= 0);
+            if (!isDead)
+                alive.Enqueue(info);
+        }
+        roundQueue = alive;
     }
 
     /// <summary>
@@ -459,6 +581,7 @@ public class BattleState : BaseState
         4. 调用 StartTurn()
         */
         round++;
+        ApplyEveryRoundBuffs();
         CheckMidEvent();
         roundQueue.Clear();
         roundList.Clear();
@@ -574,6 +697,154 @@ public class BattleState : BaseState
             }
         }
     }
+
+    #region MoreItemBranch Buff 系统
+
+    /// <summary>
+    /// 检查 MoreItemBranch 的分支条件是否满足
+    /// </summary>
+    /// <param name="itemBranch">道具分支配置</param>
+    /// <param name="branchList">玩家分支选择记录</param>
+    /// <returns>true = 满足条件，应添加 buff</returns>
+    private bool IsItemBranchMatch(MoreItemBranch itemBranch, Dictionary<string, string> branchList)
+    {
+        // branchId 为空 → 无条件添加 buff（规则5，优先级最高）
+        if (string.IsNullOrEmpty(itemBranch.branchId)) return true;
+
+        // 有 branchId 但没有 PlayerData → 无法匹配
+        if (branchList == null) return false;
+
+        bool hasKey = branchList.ContainsKey(itemBranch.branchId);
+        string branchVal = hasKey ? branchList[itemBranch.branchId] : null;
+
+        // 两个都为空 → 直接匹配（规则1）
+        if (string.IsNullOrEmpty(branchVal) && string.IsNullOrEmpty(itemBranch.choose))
+            return true;
+
+        // 选择值匹配 → 匹配（规则1）
+        if (hasKey && branchVal == itemBranch.choose)
+            return true;
+
+        return false;
+    }
+
+    /// <summary>
+    /// 根据 MoreItemBranch 配置为目标角色应用 buff
+    /// 如果 isForAllRole 为 true，为全体友军添加；否则按 roleIndex 为特定角色添加
+    /// </summary>
+    private void ApplyMoreItemBranchBuff(MoreItemBranch itemBranch)
+    {
+        if (itemBranch.buffInfo == null) return;
+
+        if (itemBranch.isForAllRole)
+        {
+            // 规则2：为全体友军增加 buff
+            foreach (var role in roleList)
+            {
+                if (role != null && role.hp.value > 0)
+                    ApplyBuffToRole(role, itemBranch.buffInfo);
+            }
+        }
+        else
+        {
+            // 规则3：按 roleIndex 为特定角色添加 buff
+            if (itemBranch.roleIndex < 0 || itemBranch.roleIndex >= roleList.Count)
+            {
+                Debug.LogError($"BattleState.ApplyMoreItemBranchBuff: roleIndex={itemBranch.roleIndex} 越界，roleList 只有 {roleList.Count} 个元素。buffName={itemBranch.buffInfo.buffName}");
+                return;
+            }
+
+            var role = roleList[itemBranch.roleIndex];
+            if (role != null && role.hp.value > 0)
+                ApplyBuffToRole(role, itemBranch.buffInfo);
+        }
+    }
+
+    /// <summary>
+    /// 为单个角色应用 buff 效果。
+    /// HP/MP 类型：通过事件回血/回蓝/扣血/扣蓝（正值恢复、负值削减，支持每回合重复执行）。
+    /// 其他类型（ATK/DEF/SPD/MAXHP/MAXMP）：直接修改属性值，
+    /// 绕过 AddBuff 的 Dictionary 去重，使 isEveryRound 与 HP/MP 行为对齐。
+    /// </summary>
+    private void ApplyBuffToRole(RoleInfo role, BuffInfo buff)
+    {
+        if (role == null || buff == null) return;
+
+        int idx = roleList.IndexOf(role);
+        if (idx < 0) return;
+
+        float actualValue = buff.isPercentage
+            ? GetBuffPercentageValue(role, buff)
+            : buff.value;
+
+        switch (buff.buffType)
+        {
+            case StatType.HP:
+            {
+                int changeValue = Mathf.RoundToInt(actualValue);
+                // 正值 = 治疗，负值 = 伤害（如中毒扣百分比血量）
+                if (changeValue != 0)
+                    BattleEventDefine.RoleHpChange.SendEventMessage(idx, -changeValue);
+                break;
+            }
+            case StatType.MP:
+            {
+                int changeValue = Mathf.RoundToInt(actualValue);
+                // 正值 = 回蓝，负值 = 扣蓝
+                if (changeValue != 0)
+                    BattleEventDefine.RoleMpChange.SendEventMessage(idx, -changeValue);
+                break;
+            }
+            default:
+                // ATK / DEF / SPD / MAXHP / MAXMP：
+                // 直接修改属性值，不经过 AddBuff（其 Dictionary 会阻止同 buff 二次生效），
+                // 使 isEveryRound 的 stat buff 能每回合正常应用。
+                role.BuffChangeValue(buff.buffType, actualValue);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 计算百分比 buff 的实际数值。
+    /// HP/MP/MAXHP/MAXMP 基于当前最大值；
+    /// ATK/DEF/SPD 基于战斗开始时的初始属性（避免每回合叠加时复合膨胀）。
+    /// </summary>
+    private float GetBuffPercentageValue(RoleInfo role, BuffInfo buff)
+    {
+        return buff.buffType switch
+        {
+            StatType.HP or StatType.MAXHP => role.maxHp.value * buff.value,
+            StatType.MP or StatType.MAXMP => role.maxMp.value * buff.value,
+            StatType.ATK => (roleInitialStats.TryGetValue(role, out var snap)
+                ? snap.attack
+                : role.attack.value) * buff.value,
+            StatType.DEF => (roleInitialStats.TryGetValue(role, out var snap)
+                ? snap.shieldValue
+                : role.shieldValue.value) * buff.value,
+            StatType.SPD => (roleInitialStats.TryGetValue(role, out var snap)
+                ? snap.speed
+                : role.speed.value) * buff.value,
+            _ => buff.value,
+        };
+    }
+
+    /// <summary>
+    /// 每回合开始时，应用所有 isEveryRound 的 buff（规则4）
+    /// 在 NextRound() 中调用
+    /// </summary>
+    private void ApplyEveryRoundBuffs()
+    {
+        if (everyRoundBuffs.Count == 0) return;
+
+        foreach (var itemBranch in everyRoundBuffs)
+        {
+            if (itemBranch == null || itemBranch.buffInfo == null) continue;
+            ApplyMoreItemBranchBuff(itemBranch);
+        }
+    }
+
+    #endregion
+
     public void StartEvent(EBattleStartEvent _event)
     {
         switch(_event)

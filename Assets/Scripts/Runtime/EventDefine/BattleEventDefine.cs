@@ -189,6 +189,22 @@ public class BattleEventDefine : MonoBehaviour
     }
 
     /// <summary>
+    /// 选择队友事件：玩家选择了治疗目标（对队友技能使用）
+    /// </summary>
+    public class SelectAlly : IEventMessage
+    {
+        /// <summary>队友在 roleList 中的索引</summary>
+        public int allyIndex;
+
+        public static void SendEventMessage(int allyIndex)
+        {
+            var msg = new SelectAlly();
+            msg.allyIndex = allyIndex;
+            UniEvent.SendMessage(msg);
+        }
+    }
+
+    /// <summary>
     /// 玩家防御事件
     /// </summary>
     public class PlayerDefend : IEventMessage
@@ -196,6 +212,25 @@ public class BattleEventDefine : MonoBehaviour
         public static void SendEventMessage()
         {
             var msg = new PlayerDefend();
+            UniEvent.SendMessage(msg);
+        }
+    }
+
+    /// <summary>
+    /// 防御特效事件：在防御者身上播放防御特效
+    /// </summary>
+    public class DefendEffect : IEventMessage
+    {
+        /// <summary>true = 玩家角色, false = 敌人</summary>
+        public bool isPlayer;
+        /// <summary>在 roleList 或 enemyList 中的索引</summary>
+        public int idx;
+
+        public static void SendEventMessage(bool isPlayer, int idx)
+        {
+            var msg = new DefendEffect();
+            msg.isPlayer = isPlayer;
+            msg.idx = idx;
             UniEvent.SendMessage(msg);
         }
     }
@@ -268,6 +303,42 @@ public class BattleEventDefine : MonoBehaviour
             msg.isDead = isDead;
             msg.hurtValue = hurtValue;
             msg.attackerIdx = attackerIdx;
+            msg.attackEffect = attackEffect;
+            msg.hitEffect = hitEffect;
+            UniEvent.SendMessage(msg);
+        }
+    }
+
+    /// <summary>
+    /// 治疗特效事件：在施法者和目标身上播放特效
+    /// </summary>
+    public class HealEffect : IEventMessage
+    {
+        /// <summary>施法者是否是玩家角色（true=角色, false=敌人）</summary>
+        public bool casterIsPlayer;
+        /// <summary>施法者在 roleList 或 enemyList 中的索引</summary>
+        public int casterIdx;
+        /// <summary>目标是否是玩家角色（true=角色, false=敌人）</summary>
+        public bool targetIsPlayer;
+        /// <summary>目标在 roleList 或 enemyList 中的索引</summary>
+        public int targetIdx;
+        /// <summary>治疗量（用于显示治疗数字）</summary>
+        public int healValue;
+        /// <summary>施法特效（可选），施法者位置播放</summary>
+        public GameObject attackEffect;
+        /// <summary>受击特效（可选），目标位置播放</summary>
+        public GameObject hitEffect;
+
+        public static void SendEventMessage(bool casterIsPlayer, int casterIdx,
+            bool targetIsPlayer, int targetIdx, int healValue,
+            GameObject attackEffect = null, GameObject hitEffect = null)
+        {
+            var msg = new HealEffect();
+            msg.casterIsPlayer = casterIsPlayer;
+            msg.casterIdx = casterIdx;
+            msg.targetIsPlayer = targetIsPlayer;
+            msg.targetIdx = targetIdx;
+            msg.healValue = healValue;
             msg.attackEffect = attackEffect;
             msg.hitEffect = hitEffect;
             UniEvent.SendMessage(msg);

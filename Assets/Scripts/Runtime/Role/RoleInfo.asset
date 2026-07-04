@@ -15,11 +15,11 @@ MonoBehaviour:
   Name: 
   avatar: {fileID: -1893562108, guid: d72e045ed0049ec498d2ca38c23a039a, type: 3}
   icon: {fileID: -379682510, guid: 4581f1bf7bcd4304e9780e6bca01b0d9, type: 3}
-  scale: 1.2
+  scale: 0.8
   attack:
     value: 100
   maxHp:
-    value: 100
+    value: 10000
   hp:
     value: 100
   maxMp:
@@ -30,11 +30,9 @@ MonoBehaviour:
     value: 15
   skills:
   - {fileID: 11400000, guid: a3117dbeefe04684780b2cf418b797d3, type: 2}
-  - {fileID: 11400000, guid: a3117dbeefe04684780b2cf418b797d3, type: 2}
-  ultimateSkill: {fileID: 11400000, guid: a3117dbeefe04684780b2cf418b797d3, type: 2}
+  - {fileID: 11400000, guid: a20c4dfaf2e57904eaaad00ab51193e9, type: 2}
+  ultimateSkill: {fileID: 0}
   normalAttack: {fileID: 11400000, guid: a3117dbeefe04684780b2cf418b797d3, type: 2}
   shieldValue:
     value: 0
-  attackEffect: {fileID: 0}
-  hitEffect: {fileID: 0}
   CloseUp: {fileID: 1747987798, guid: 7d9f16079700c1446a2f30e7d335ef0c, type: 3}

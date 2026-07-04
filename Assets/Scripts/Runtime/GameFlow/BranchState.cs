@@ -89,9 +89,17 @@ public class BranchState : BaseState
                 // 结束分支，回到地图界面，玩家数据进入下一个节点
                 EndBranch();
                 break;
+            case EOnEnd.NextLog:
+                // 切换到下一个对话（复用 nextDialogue 字段）
+                NextLogDialogue();
+                break;
             case EOnEnd.End:
                 // 进入 EndState，根据 EndSetting 中的分支条件决定后续流程
                 StartEnd();
+                break;
+            case EOnEnd.GoBackToMenu:
+                // 回到主菜单，清空所有挂起状态，经过加载界面
+                GoBackToMenu();
                 break;
         }
     }
@@ -138,5 +146,28 @@ public class BranchState : BaseState
     {
         // 切换到 EndState，销毁当前 BranchState
         StateEventDefine.ChangeState.SendEventMessage<EndState>("EndState", branchSetting.endSetting, true);
+    }
+
+    private void NextLogDialogue()
+    {
+        // BranchState 的 BranchPanel 和 DialogueState 的 DialoguePanel 是不同的面板，
+        // 不存在 DialogueState→DialogueState 时的同面板冲突，直接 ChangeState 即可。
+        // 复用 nextDialogue 字段：BranchSetting 中 NextLog 和 NextDialogue 效果相同（切换到新对话）
+        var nextLog = branchSetting.nextDialogue;
+        if (nextLog == null)
+        {
+            Debug.LogWarning("BranchState: nextDialogue (for NextLog) is null, fallback to GoBackToLastState");
+            GoBackToLastState();
+            return;
+        }
+        // 切换到 DialogueState 并销毁当前 BranchState
+        StateEventDefine.ChangeState.SendEventMessage<DialogueState>("LogState", nextLog, true);
+    }
+
+    private void GoBackToMenu()
+    {
+        // 清空所有挂起状态，经过加载界面回到主菜单
+        Machine.ClearSuspendedNodes();
+        StateEventDefine.ChangeState.SendEventMessage<GameStart>("GameStart");
     }
 }

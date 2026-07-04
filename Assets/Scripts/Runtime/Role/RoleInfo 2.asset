@@ -15,11 +15,11 @@ MonoBehaviour:
   Name: 
   avatar: {fileID: 21300000, guid: f1417520651f01a40911d4a1bda60b30, type: 3}
   icon: {fileID: 21300000, guid: 273188e39e858be4b94ae2f0d72cda04, type: 3}
-  scale: 1.2
+  scale: 1
   attack:
     value: 50
   maxHp:
-    value: 100
+    value: 10000
   hp:
     value: 100
   maxMp:
@@ -35,6 +35,4 @@ MonoBehaviour:
   normalAttack: {fileID: 11400000, guid: a3117dbeefe04684780b2cf418b797d3, type: 2}
   shieldValue:
     value: 0
-  attackEffect: {fileID: 0}
-  hitEffect: {fileID: 0}
   CloseUp: {fileID: 21300000, guid: 273188e39e858be4b94ae2f0d72cda04, type: 3}
