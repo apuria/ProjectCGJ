@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Eff_glow_02 5
+  m_Name: Eff_glow_02 6
   m_Shader: {fileID: 4800000, guid: 3618b79a80fc7004aacd0736c8f25c81, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
