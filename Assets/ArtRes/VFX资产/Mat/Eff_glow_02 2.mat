@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Eff_glow_02
+  m_Name: Eff_glow_02 2
   m_Shader: {fileID: 4800000, guid: 3618b79a80fc7004aacd0736c8f25c81, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -18,7 +18,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3110
+  m_CustomRenderQueue: 3100
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -38,7 +38,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTextures:
-        m_Texture: {fileID: 2800000, guid: 26aab7b16effc744ebcc8c90ee653d6b, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2d1c9b0f486585a4893b802d1f7e7d68, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -136,7 +136,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _FreiColor: {r: 1, g: 0.6950364, b: 0.0990566, a: 0}
-    - _FreiColor1: {r: 6.0628657, g: 6.0628657, b: 6.0628657, a: 1}
+    - _FreiColor1: {r: 1.9478786, g: 1.6207627, b: 1.1668893, a: 1}
     - _FreiColor2: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _Vector0: {r: 0, g: 0, b: 0, a: 0}
