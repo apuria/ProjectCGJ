@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: 
   avatar: {fileID: -1893562108, guid: d72e045ed0049ec498d2ca38c23a039a, type: 3}
-  icon: {fileID: -379682510, guid: 4581f1bf7bcd4304e9780e6bca01b0d9, type: 3}
-  scale: 0.8
+  icon: {fileID: 21300000, guid: 01721fe91f3510d4cb976c8aba05709c, type: 3}
+  scale: 1
   attack:
     value: 100
   maxHp:
@@ -35,4 +35,4 @@ MonoBehaviour:
   normalAttack: {fileID: 11400000, guid: a3117dbeefe04684780b2cf418b797d3, type: 2}
   shieldValue:
     value: 0
-  CloseUp: {fileID: 1747987798, guid: 7d9f16079700c1446a2f30e7d335ef0c, type: 3}
+  CloseUp: {fileID: -591229228, guid: 0432e5e5044a7dc4ab5e7067fae33727, type: 3}

@@ -8,7 +8,7 @@ public class MapPanel : BasePanel
 {
 //
 /*
-1. 4个节点的图标
+1. 6个节点的图标
 2. 退出按钮
 3. 继续按钮
 4. 根据玩家所处节点设置玩家图标所在位置
@@ -23,8 +23,9 @@ public class MapPanel : BasePanel
     public Image node2;
     public Image node3;
     public Image node4;
+    public Image node5;
+    public Image node6;
     public Image nowNode;
-
     private List<Image> nodeImages;
 
 #endregion
@@ -33,7 +34,7 @@ public class MapPanel : BasePanel
     protected void Awake()
     {
         eventGroup = new();
-        nodeImages = new List<Image> { node1, node2, node3, node4 };
+        nodeImages = new List<Image> { node1, node2, node3, node4, node5, node6 };
     }
 
     protected void Start()
@@ -74,7 +75,7 @@ public class MapPanel : BasePanel
     }
 
     /// <summary>
-    /// 更新四个节点的图标状态
+    /// 更新六个节点的图标状态
     /// </summary>
     private void UpdateNodes()
     {

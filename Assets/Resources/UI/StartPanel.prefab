@@ -222,6 +222,7 @@ GameObject:
   - component: {fileID: 2728731335946682046}
   - component: {fileID: 3271259047731455535}
   - component: {fileID: 5214166285905654396}
+  - component: {fileID: 2588096293462642915}
   m_Layer: 5
   m_Name: BtnContinue
   m_TagString: Untagged
@@ -346,6 +347,19 @@ MonoBehaviour:
   pressedScale: 0.9
   pressDuration: 0.06
   releaseDuration: 0.15
+--- !u!114 &2588096293462642915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736267011629519966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d709130e595504296a85767170a412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSoundName: "\u70B9\u51FB"
 --- !u!1 &1437032422869009614
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,6 +373,7 @@ GameObject:
   - component: {fileID: 344503373348837197}
   - component: {fileID: 644674525416940281}
   - component: {fileID: 6233273037338310842}
+  - component: {fileID: 7623713981979395371}
   m_Layer: 5
   m_Name: BtnQuit
   m_TagString: Untagged
@@ -483,6 +498,19 @@ MonoBehaviour:
   pressedScale: 0.9
   pressDuration: 0.06
   releaseDuration: 0.15
+--- !u!114 &7623713981979395371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437032422869009614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d709130e595504296a85767170a412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSoundName: "\u70B9\u51FB"
 --- !u!1 &1480803993048722459
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,6 +769,7 @@ GameObject:
   - component: {fileID: 7272227062837566392}
   - component: {fileID: 8903503709985225972}
   - component: {fileID: 1728439653655091305}
+  - component: {fileID: 4026190807557482345}
   m_Layer: 5
   m_Name: BtnSure
   m_TagString: Untagged
@@ -865,6 +894,19 @@ MonoBehaviour:
   pressedScale: 0.9
   pressDuration: 0.06
   releaseDuration: 0.15
+--- !u!114 &4026190807557482345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039261396129247662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d709130e595504296a85767170a412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSoundName: "\u70B9\u51FB"
 --- !u!1 &2593850090831567154
 GameObject:
   m_ObjectHideFlags: 0
@@ -953,6 +995,7 @@ GameObject:
   - component: {fileID: 4665859909284391870}
   - component: {fileID: 7662042508809005000}
   - component: {fileID: 4959089847137558442}
+  - component: {fileID: 7554014061515789547}
   m_Layer: 5
   m_Name: ButtonSetting
   m_TagString: Untagged
@@ -1076,6 +1119,19 @@ MonoBehaviour:
   pressedScale: 0.9
   pressDuration: 0.06
   releaseDuration: 0.15
+--- !u!114 &7554014061515789547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2863828250419679711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d709130e595504296a85767170a412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSoundName: "\u70B9\u51FB"
 --- !u!1 &3443343994559137607
 GameObject:
   m_ObjectHideFlags: 0
@@ -1734,6 +1790,7 @@ GameObject:
   - component: {fileID: 2600667881151446358}
   - component: {fileID: 2738906832277966883}
   - component: {fileID: 3732625097761107408}
+  - component: {fileID: 7574662310053872390}
   m_Layer: 5
   m_Name: BtnStartANewGame
   m_TagString: Untagged
@@ -1858,6 +1915,19 @@ MonoBehaviour:
   pressedScale: 0.9
   pressDuration: 0.06
   releaseDuration: 0.15
+--- !u!114 &7574662310053872390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5175027990722002029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d709130e595504296a85767170a412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSoundName: "\u70B9\u51FB"
 --- !u!1 &5315199694280651906
 GameObject:
   m_ObjectHideFlags: 0

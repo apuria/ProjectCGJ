@@ -23,3 +23,4 @@ MonoBehaviour:
   buff: {fileID: 0}
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 8351583881227030724, guid: 17a151dbdcd1cc84abc756aa6f7147eb, type: 3}
+  sfxName: "\u653B\u51FB\u97F3\u6548"

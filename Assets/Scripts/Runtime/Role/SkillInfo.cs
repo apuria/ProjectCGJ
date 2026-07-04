@@ -42,6 +42,10 @@ public class SkillInfo : ScriptableObject
     public GameObject attackEffect;
     public GameObject hitEffect;
 
+    [Header("Sound Effects")]
+    [Tooltip("使用技能时播放的音效名称（留空则不播放）")]
+    public string sfxName;
+
     private const float MinEffectWaitTime = 1.5f;
 
     /// <summary>

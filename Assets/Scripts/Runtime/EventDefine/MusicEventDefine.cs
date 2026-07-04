@@ -45,15 +45,21 @@ public class MusicEventDefine
         public string sfxName;
 
         /// <summary>
+        /// 是否循环播放，默认 false
+        /// </summary>
+        public bool loop;
+
+        /// <summary>
         /// 音量缩放（0.0 ~ 1.0），默认 1.0
         /// </summary>
         public float volumeScale = 1f;
 
-        public static void SendEventMessage(string sfxName, float volumeScale = 1f)
+        public static void SendEventMessage(string sfxName, bool loop = false, float volumeScale = 1f)
         {
             var msg = new PlaySFX
             {
                 sfxName = sfxName,
+                loop = loop,
                 volumeScale = volumeScale
             };
             UniEvent.SendMessage(msg);

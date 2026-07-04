@@ -8,6 +8,7 @@ using UnityEngine;
 [CustomEditor(typeof(DialogueSetting))]
 public class DialogueSettingsEditor : Editor
 {
+    private SerializedProperty bgmNameProp;
     private SerializedProperty hasReturnButtonProp;
     private SerializedProperty hasBackgroundProp;
     private SerializedProperty backGroundProp;
@@ -16,6 +17,7 @@ public class DialogueSettingsEditor : Editor
 
     private void OnEnable()
     {
+        bgmNameProp = serializedObject.FindProperty("bgmName");
         hasReturnButtonProp = serializedObject.FindProperty("hasReturnButton");
         hasBackgroundProp = serializedObject.FindProperty("hasBackground");
         backGroundProp = serializedObject.FindProperty("BackGround");
@@ -26,6 +28,10 @@ public class DialogueSettingsEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+
+        EditorGUILayout.PropertyField(bgmNameProp, new GUIContent("背景音乐"));
+
+        EditorGUILayout.Space();
 
         EditorGUILayout.PropertyField(hasReturnButtonProp, new GUIContent("显示返回按钮"));
         EditorGUILayout.PropertyField(hasBackgroundProp, new GUIContent("显示背景"));

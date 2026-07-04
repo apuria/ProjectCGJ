@@ -6,6 +6,10 @@ using UniFramework.Machine;
 [CreateAssetMenu(fileName = "New Dialogue", menuName = "Dialogue/New Dialogue", order = 0)]
 public class DialogueSetting : ScriptableObject, IStateData
 {
+    [Header("Music Settings")]
+    [Tooltip("背景音乐名称（留空则播放 DefaultBGM）")]
+    public string bgmName;
+
     [Header("UI Settings")]
     [Tooltip("是否显示返回按钮")]
     public bool hasReturnButton = false;

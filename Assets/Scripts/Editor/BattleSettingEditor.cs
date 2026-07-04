@@ -9,6 +9,7 @@ using UnityEngine;
 [CustomEditor(typeof(BattleSetting))]
 public class BattleSettingEditor : Editor
 {
+    private SerializedProperty bgmNameProp;
     private SerializedProperty enemiesProp;
 
     // 开始事件
@@ -44,6 +45,7 @@ public class BattleSettingEditor : Editor
 
     private void OnEnable()
     {
+        bgmNameProp = serializedObject.FindProperty("bgmName");
         enemiesProp = serializedObject.FindProperty("enemies");
 
         startEventProp = serializedObject.FindProperty("startEvent");
@@ -69,6 +71,10 @@ public class BattleSettingEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+
+        // ── 音乐 ──
+        EditorGUILayout.PropertyField(bgmNameProp, new GUIContent("背景音乐"));
+        EditorGUILayout.Space();
 
         // ── 敌人列表 ──
         EditorGUILayout.PropertyField(enemiesProp, new GUIContent("Enemies"), true);

@@ -20,6 +20,8 @@ public class PlayerData
         Node2,
         Node3,
         Node4,
+        Node5,
+        Node6,
         End
     }
 

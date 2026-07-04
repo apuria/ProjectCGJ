@@ -19,6 +19,8 @@ public class MapState : BaseState
 
     public override void OnEnter()
     {
+        MusicEventDefine.PlayBGM.SendEventMessage("DefaultBGM");
+
         // 回到地图时清除所有挂起的状态节点，确保状态机处于干净状态
         Machine.ClearSuspendedNodes();
 
@@ -51,10 +53,10 @@ public class MapState : BaseState
                 GameEventDefine.SaveProgress.SendEventMessage();
                 break;
             default:
-                // 通关后（End 事件已完成，NowFlow > End），回退到节点4并返回主菜单
+                // 通关后（End 事件已完成，NowFlow > End），回退到最后一个节点并返回主菜单
                 if (playerData.NowFlow > PlayerData.Flow.End)
                 {
-                    playerData.NowFlow = PlayerData.Flow.Node4;
+                    playerData.NowFlow = PlayerData.Flow.Node6;
                     GameEventDefine.SaveProgress.SendEventMessage();
                     StateEventDefine.ChangeState.SendEventMessage<GameStart>("GameStart");
                     return;

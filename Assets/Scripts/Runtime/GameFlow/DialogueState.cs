@@ -23,6 +23,10 @@ public class DialogueState : BaseState
 
     public override void OnEnter()
     {
+        // 播放对话专属背景音乐，未配置则播放默认音乐
+        string bgm = string.IsNullOrEmpty(nowDialogue.bgmName) ? "DefaultBGM" : nowDialogue.bgmName;
+        MusicEventDefine.PlayBGM.SendEventMessage(bgm);
+
         // 重置对话索引
         index = 0;
         // 显示对话面板

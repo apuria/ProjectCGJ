@@ -163,10 +163,24 @@ public class PlayerBattleState : BaseBattleState
             BattleEventDefine.RoleMpChange.SendEventMessage(actorIdx, skill.mpCost);
         }
 
+        // 播放技能音效（配置了才播放）
+        PlaySkillSFX(skill);
+
         executeAction();
 
         float delay = SkillInfo.GetEffectTime(skill);
         BattleEventDefine.EnemyActionDelay.SendEventMessage(delay);
+    }
+
+    /// <summary>
+    /// 播放技能音效（未配置则不播放）
+    /// </summary>
+    private static void PlaySkillSFX(SkillInfo skill)
+    {
+        if (skill != null && !string.IsNullOrEmpty(skill.sfxName))
+        {
+            MusicEventDefine.PlaySFX.SendEventMessage(skill.sfxName);
+        }
     }
 
     /// <summary>

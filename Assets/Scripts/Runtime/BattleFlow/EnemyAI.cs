@@ -127,6 +127,9 @@ public class EnemyAI
     /// </summary>
     private static void DoAttack(EnemyInfo enemy, int targetIdx, List<EnemyInfo> enemyList)
     {
+        // 播放普攻音效（配置了才播放）
+        PlaySkillSFX(enemy.normalAttack);
+
         int damage = enemy.normalAttack != null
             ? Mathf.RoundToInt(enemy.attack.value * enemy.normalAttack.Damage)
             : Mathf.RoundToInt(enemy.attack.value * 1f);
@@ -179,6 +182,10 @@ public class EnemyAI
         }
 
         SkillInfo skill = enemy.skills[Random.Range(0, enemy.skills.Count)];
+
+        // 播放技能音效（配置了才播放）
+        PlaySkillSFX(skill);
+
         int enemyIdx = enemyList != null ? enemyList.IndexOf(enemy) : 0;
 
         // 根据技能目标类型分支处理
@@ -281,5 +288,16 @@ public class EnemyAI
         // 如果没有存活队友可治疗，技能仍然消耗（特效播放但无目标）
 
         return SkillInfo.GetEffectTime(skill);
+    }
+
+    /// <summary>
+    /// 播放技能音效（未配置则不播放）
+    /// </summary>
+    private static void PlaySkillSFX(SkillInfo skill)
+    {
+        if (skill != null && !string.IsNullOrEmpty(skill.sfxName))
+        {
+            MusicEventDefine.PlaySFX.SendEventMessage(skill.sfxName);
+        }
     }
 }

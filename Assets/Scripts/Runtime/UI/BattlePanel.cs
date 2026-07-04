@@ -15,6 +15,7 @@ public class BattlePanel : BasePanel
 #region 属性
 
     public Button btnSetting;
+    public SettingPanel settingPanel;
     public Button btnState;
     public Button btnReturn;
     public Button btnQuit;
@@ -155,6 +156,12 @@ public class BattlePanel : BasePanel
         btnState.onClick.AddListener(() =>
         {
             roleState.gameObject.SetActive(!roleState.gameObject.activeSelf);
+        });
+
+        btnSetting.onClick.AddListener(() =>
+        {
+            settingPanel.gameObject.SetActive(true);
+            settingPanel.ShowMe();
         });
 
         // btnRun: 逃跑按钮 → 重新开始战斗（弹出确认对话框）

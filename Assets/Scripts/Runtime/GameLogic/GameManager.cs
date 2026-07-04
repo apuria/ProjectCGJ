@@ -47,9 +47,19 @@ public class GameManager : SingletonMono<GameManager>
         {
             Debug.LogWarning("GameManager.Awake: 场景中未找到名为 'Canvas' 的 GameObject，稍后将由 UIMgr 创建");
         }
+
+        // 在 Awake 中注册所有事件监听，确保在 Boot.Start() 触发 Init() 之前就绪
+        RegisterEventListeners();
     }
 
     void Start()
+    {
+    }
+
+    /// <summary>
+    /// 注册所有事件监听（在 Awake 中调用，早于任何 Start）
+    /// </summary>
+    private void RegisterEventListeners()
     {
         // 状态切换事件
         eventGroup.AddListener<StateEventDefine.ChangeState>(OnHandleEventMessage);
@@ -69,9 +79,17 @@ public class GameManager : SingletonMono<GameManager>
 
         // 提示面板事件
         eventGroup.AddListener<TipPanelEventDefine.ShowTip>(OnHandleEventMessage);
-        
-        //游戏内数据事件
+
+        // 游戏内数据事件
         eventGroup.AddListener<GameEventDefine.SaveInGameData>(OnHandleEventMessage);
+
+        // 音乐音效事件
+        eventGroup.AddListener<MusicEventDefine.PlayBGM>(OnHandleEventMessage);
+        eventGroup.AddListener<MusicEventDefine.PlaySFX>(OnHandleEventMessage);
+        eventGroup.AddListener<MusicEventDefine.StopBGM>(OnHandleEventMessage);
+        eventGroup.AddListener<MusicEventDefine.StopSFX>(OnHandleEventMessage);
+        eventGroup.AddListener<MusicEventDefine.ChangeBGMVolume>(OnHandleEventMessage);
+        eventGroup.AddListener<MusicEventDefine.ChangeSFXVolume>(OnHandleEventMessage);
     }
 
     void Update()
@@ -161,6 +179,118 @@ public class GameManager : SingletonMono<GameManager>
         {
             SaveSettingData();
         }
+        else if (message is MusicEventDefine.PlayBGM playBGM)
+        {
+            HandlePlayBGM(playBGM);
+        }
+        else if (message is MusicEventDefine.PlaySFX playSFX)
+        {
+            HandlePlaySFX(playSFX);
+        }
+        else if (message is MusicEventDefine.StopBGM)
+        {
+            HandleStopBGM();
+        }
+        else if (message is MusicEventDefine.StopSFX stopSFX)
+        {
+            HandleStopSFX(stopSFX);
+        }
+        else if (message is MusicEventDefine.ChangeBGMVolume changeBGM)
+        {
+            HandleChangeBGMVolume(changeBGM);
+        }
+        else if (message is MusicEventDefine.ChangeSFXVolume changeSFX)
+        {
+            HandleChangeSFXVolume(changeSFX);
+        }
+    }
+#endregion
+
+#region 音乐音效处理
+    /// <summary>
+    /// 播放背景音乐（始终循环播放）
+    /// </summary>
+    private void HandlePlayBGM(MusicEventDefine.PlayBGM playBGM)
+    {
+        if (inGameData == null)
+            LoadSettingData();
+
+        // 如果音乐关闭，不播放
+        if (!inGameData.MusicOn)
+            return;
+
+        MusicMgr.Instance.ChangeBKMusicValue(inGameData.MusicVolume);
+        MusicMgr.Instance.PlayBKMusic(playBGM.musicName);
+    }
+
+    /// <summary>
+    /// 播放音效
+    /// </summary>
+    private void HandlePlaySFX(MusicEventDefine.PlaySFX playSFX)
+    {
+        if (inGameData == null)
+            LoadSettingData();
+
+        // 如果音效关闭，不播放
+        if (!inGameData.SfxOn)
+            return;
+
+        // 播放前应用当前音量设置
+        MusicMgr.Instance.ChangeSoundValue(inGameData.SfxVolume);
+        MusicMgr.Instance.PlaySound(playSFX.sfxName, playSFX.loop);
+    }
+
+    /// <summary>
+    /// 停止背景音乐
+    /// </summary>
+    private void HandleStopBGM()
+    {
+        MusicMgr.Instance.StopBKMusic();
+    }
+
+    /// <summary>
+    /// 停止音效（sfxName 为空则停止所有）
+    /// </summary>
+    private void HandleStopSFX(MusicEventDefine.StopSFX stopSFX)
+    {
+        if (string.IsNullOrEmpty(stopSFX.sfxName))
+        {
+            // 停止所有音效
+            MusicMgr.Instance.ClearSound();
+        }
+        else
+        {
+            // TODO: MusicMgr 目前不支持按名称停止单个音效，暂时清空所有
+            MusicMgr.Instance.ClearSound();
+        }
+    }
+
+    /// <summary>
+    /// 修改背景音乐音量，同时更新玩家设置
+    /// </summary>
+    private void HandleChangeBGMVolume(MusicEventDefine.ChangeBGMVolume changeBGM)
+    {
+        if (inGameData == null)
+            LoadSettingData();
+
+        inGameData.MusicVolume = changeBGM.volume;
+        // 应用音量：静音时为 0，否则使用设置的音量
+        float actualVolume = inGameData.MusicOn ? inGameData.MusicVolume : 0f;
+        MusicMgr.Instance.ChangeBKMusicValue(actualVolume);
+    }
+
+    /// <summary>
+    /// 修改音效音量，同时更新玩家设置
+    /// </summary>
+    private void HandleChangeSFXVolume(MusicEventDefine.ChangeSFXVolume changeSFX)
+    {
+        if (inGameData == null)
+            LoadSettingData();
+
+        inGameData.SfxVolume = changeSFX.volume;
+        // 应用音量：静音时为 0，否则使用设置的音量
+        float actualVolume = inGameData.SfxOn ? inGameData.SfxVolume : 0f;
+        MusicMgr.Instance.ChangeSoundValue(actualVolume);
     }
 #endregion
 
@@ -271,13 +401,15 @@ public class GameManager : SingletonMono<GameManager>
     public GameNode EndNode;
 
     [SerializeField]
-    [Tooltip("游戏流程的 4 个节点配置，每个节点对应一个状态类型及其 Setting")]
+    [Tooltip("游戏流程的 6 个节点配置，每个节点对应一个状态类型及其 Setting")]
     private List<GameNode> gameNodes = new()
     {
         new GameNode { nodeName = "Node 1", stateType = GameState.Battle },
         new GameNode { nodeName = "Node 2", stateType = GameState.Battle },
         new GameNode { nodeName = "Node 3", stateType = GameState.DiaLogue },
         new GameNode { nodeName = "Node 4", stateType = GameState.Battle },
+        new GameNode { nodeName = "Node 5", stateType = GameState.DiaLogue },
+        new GameNode { nodeName = "Node 6", stateType = GameState.Battle },
     };
 
     /// <summary>

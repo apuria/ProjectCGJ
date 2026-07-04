@@ -120,6 +120,10 @@ public class BattleState : BaseState
 
     public override void OnEnter()
     {
+        // 播放战斗专属背景音乐，未配置则播放默认音乐
+        string bgm = string.IsNullOrEmpty(battleSetting.bgmName) ? "DefaultBGM" : battleSetting.bgmName;
+        MusicEventDefine.PlayBGM.SendEventMessage(bgm);
+
         if (!isBattleStart)
         {
             // === 首次进入：初始化并处理开始事件 ===

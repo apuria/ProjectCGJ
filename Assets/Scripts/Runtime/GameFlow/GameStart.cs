@@ -21,7 +21,7 @@ public class GameStart : BaseState
 
     public override void OnEnter()
     {
-        
+        MusicEventDefine.PlayBGM.SendEventMessage("DefaultBGM");
     }
 
     public override void OnExit()
