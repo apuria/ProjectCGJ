@@ -1,0 +1,191 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 030013200b5fac74bbd9b89d55fbb568, type: 3}
+  m_Name: "Dialogue_\u4E0E\u795E\u660E\u5BF9\u8BDD"
+  m_EditorClassIdentifier: 
+  hasReturnButton: 0
+  hasBackground: 0
+  BackGround: {fileID: 0}
+  speakers:
+  - name: "\u5B89\u514B"
+    CharaArtwork: {fileID: 21300000, guid: 06624ab4412b9c14e8a88b282f446adc, type: 3}
+  - name: "\u795E\u660E"
+    CharaArtwork: {fileID: 21300000, guid: 273188e39e858be4b94ae2f0d72cda04, type: 3}
+  dialogues:
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 0
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 1
+    text: "\u54C8\u55BD\uFF0C\u5B89\u514B(^_^)v"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 0
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 0
+    text: "\uFF1F"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 0
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 1
+    text: "\u6211\u6765\u89E3\u91CA\u4E00\u4E0B\u5427\uFF0C\u4F60\u73B0\u5728\u662F\u8981\u53BB\u8BA8\u4F10\u9B54\u738B\u7684\u8DEF\u4E0A\u5BF9\u5427\uFF1F"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 0
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 0
+    text: "\u2026\u2026\u7B49\u4E0B\uFF0C\u8981\u5410\u69FD\u7684\u70B9\u6709\u70B9\u591A"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 1
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 1
+    text: "\u54CE\u5440\uFF0C\u603B\u800C\u8A00\u4E4B\uFF0C\u6211\u662F\u8FD9\u4E2A\u4E16\u754C\u7684\u795E\u660E\uFF0C\u8D1F\u8D23\u7EF4\u62A4\u8FD9\u4E2A\u4E16\u754C\u7684\u7A33\u5B9A\uFF0C\u5DE5\u4F5C\u5185\u5BB9\u5927\u6982\u662F\u5E2E\u4F60\u6210\u529F\u51FB\u8D25\u9B54\u738B"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 1
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 1
+    text: "\u4E0D\u8FC7\u9B54\u738B\u6BCF\u6B21\u5728\u4F60\u51FB\u8D25\u4ED6\u6216\u8005\u4E4B\u540E\uFF0C\u90FD\u4F1A\u94BB\u67D0\u4E9Bbug\uFF0C\u6765\u6270\u4E71\u8FD9\u4E2A\u4E16\u754C\u7684\u65F6\u7A7A\uFF0C\u5BFC\u81F4\u4F60\u5DF2\u7ECF\u91CD\u6765\u4E86\u6210\u767E\u4E0A\u5343\u6B21\u8FD9\u6837\u7684\u5267\u60C5\u4E86"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 1
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 0
+    text: "\u6240\u4EE5\uFF0C\u4F60\u662F\u6765\u5E2E\u6211\u51FB\u8D25\u9B54\u738B\u7684\uFF1F"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 1
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 1
+    text: "\u5443\uFF0C\u5BF9\u4E0D\u8D77\uFF0C\u6211\u592A\u5FD9\u4E86\uFF0C\u5728\u4F60\u88AB\u51FB\u8D25\u7684\u65F6\u5019\u91CD\u6765\u7684\u8FD9\u4EF6\u4E8B\u592A\u9EBB\u70E6\u4E86\uFF0C\u73B0\u5728\u6211\u7684\u529B\u91CF\u4E5F\u4E0D\u592A\u591F\u4E86"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 1
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 1
+    text: "\u6240\u4EE5\u4F60\u8981\u4E0D\u81EA\u5DF1\u6765\u5427\uFF0C\u558F"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 1
+    leftSpeakerIndex: -1
+    rightSpeakerIndex: -1
+    talkingSpeaker: 0
+    text: "\u4E00\u4E2A\u7CBE\u81F4\u7684\u6000\u8868\u88AB\u773C\u524D\u4E4B\u4EBA\u4E22\u4E86\u8FC7\u6765"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 1
+    cgImage: {fileID: 21300000, guid: 327ca7a190cfaab448e9de2eff62e3ca, type: 3}
+    showDialogueBox: 0
+    leftSpeakerIndex: -1
+    rightSpeakerIndex: -1
+    talkingSpeaker: 0
+    text: "\u6240\u4EE5\u4F60\u8981\u4E0D\u81EA\u5DF1\u6765\u5427\uFF0C\u558F"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 1
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 0
+    text: "\uFF1F"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 1
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 1
+    text: "\u4F60\u53EA\u8981\u5E26\u7740\u5C31\u884C\u4E86\uFF0C\u76F8\u5F53\u4E8E\u4E00\u4E2A\u7A33\u5B9A\u4F60\u81EA\u5DF1\u65F6\u7A7A\u7684\u795E\u5668\u54E6\uFF0C\u4E0D\u9700\u8981\u4F60\u624B\u52A8\u64CD\u4F5C\uFF0C\u5F88\u795E\u5947\u5427"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 1
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 1
+    talkingSpeaker: 1
+    text: "\u5C31\u8FD9\u6837\u54AF\uFF0C886"
+    onEnd: 5
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}

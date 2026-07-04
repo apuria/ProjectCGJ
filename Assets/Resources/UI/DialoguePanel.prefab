@@ -170,8 +170,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0063667, y: -295.34}
-  m_SizeDelta: {x: 1844, y: 431.81}
+  m_AnchoredPosition: {x: -0.0063667, y: 1.555}
+  m_SizeDelta: {x: 1844, y: 1025.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7168774733498747492
 CanvasRenderer:
@@ -342,6 +342,7 @@ GameObject:
   - component: {fileID: 2316908479008727236}
   - component: {fileID: 202587030087811921}
   - component: {fileID: 449981240256501326}
+  - component: {fileID: 3615097949755296674}
   m_Layer: 5
   m_Name: quitButton
   m_TagString: Untagged
@@ -451,6 +452,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3615097949755296674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265647942395012995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20a626bb74bca464fb4f0c196e158323, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.9
+  pressDuration: 0.06
+  releaseDuration: 0.15
 --- !u!1 &1908439138160116136
 GameObject:
   m_ObjectHideFlags: 0
@@ -638,8 +654,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0063667, y: -295.34}
-  m_SizeDelta: {x: 1844, y: 431.81}
+  m_AnchoredPosition: {x: -0.0063667, y: 1.555}
+  m_SizeDelta: {x: 1844, y: 1025.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2193106171739866991
 CanvasRenderer:

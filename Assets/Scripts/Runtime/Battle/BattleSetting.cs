@@ -19,6 +19,14 @@ public class BattleSetting : ScriptableObject, IStateData
     [Tooltip("敌人列表（最多三个）")]
     public List<EnemyInfo> enemies = new();
 
+#region 
+
+    [Header("道具分支")]
+    [Tooltip("道具分支选项列表")]
+    public List<MoreItemBranch> moreItemBranches = new();
+
+#endregion
+
 #region 多角色分支
 
     [Header("多角色分支")]

@@ -125,3 +125,11 @@ public class MoreRoleBranch
     public string branchId;
     public string choose;
 }
+
+public class MoreItemBranch
+{
+    public int roleIndex;
+    public string branchId;
+    public string choose;
+}
+
