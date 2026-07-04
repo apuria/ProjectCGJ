@@ -10,12 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 030013200b5fac74bbd9b89d55fbb568, type: 3}
-  m_Name: "Dialogue_\u9047\u5230\u53F2\u83B1\u59C6"
+  m_Name: "Dialogue_\u548C\u77EE\u4EBA\u7ED3\u675F\u6218\u6597"
   m_EditorClassIdentifier: 
   hasReturnButton: 0
-  hasBackground: 1
-  BackGround: {fileID: 21300000, guid: 26b6a4e5c9ac85d45a04b7c31379f045, type: 3}
-  speakers:
-  - name: 
-    CharaArtwork: {fileID: 0}
+  hasBackground: 0
+  BackGround: {fileID: 0}
+  speakers: []
   dialogues: []

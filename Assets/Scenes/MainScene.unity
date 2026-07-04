@@ -182,10 +182,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
   loadingTexts: {fileID: 11400000, guid: 5dd560b678cb1c148943a2b907539a49, type: 2}
-  mainRole: {fileID: 11400000, guid: 8125f260649da1e4fb135a5c4f637f63, type: 2}
-  roleList:
-  - {fileID: 11400000, guid: 474318331fd6f6243a7899c4bd38e1ec, type: 2}
-  - {fileID: 11400000, guid: 7d7f0b20415820a489b5df8988bea84a, type: 2}
+  mainRole: {fileID: 0}
+  roleList: []
   hasStartEvent: 1
   hasEndEvent: 0
   StartNode:
@@ -204,10 +202,10 @@ MonoBehaviour:
     branchSetting: {fileID: 0}
   gameNodes:
   - nodeName: Node 1
-    stateType: 0
+    stateType: 1
     icon: {fileID: -441503911, guid: ff75803f119264343b956b866c7e505d, type: 3}
-    battleSetting: {fileID: 11400000, guid: 9a6a6be7223ec9c46a7a6b95f9789841, type: 2}
-    dialogueSetting: {fileID: 0}
+    battleSetting: {fileID: 0}
+    dialogueSetting: {fileID: 11400000, guid: 569fec421c4c6b340831c5ffaad5b227, type: 2}
     branchSetting: {fileID: 0}
   - nodeName: Node 2
     stateType: 1
