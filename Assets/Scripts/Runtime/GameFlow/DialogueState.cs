@@ -119,10 +119,14 @@ public class DialogueState : BaseState
             GoBackToLastState();
             return;
         }
-        // StateMachine.SwitchTo 已修复同 tag 切换时的面板生命周期问题：
-        // 当前 DialogueState 会在新 DialogueState.OnCreate 之前被 OnDispose，
-        // 确保新状态创建时 panelDic 已空 → 新建面板，不会被旧状态销毁。
-        StateEventDefine.ChangeState.SendEventMessage<DialogueState>("LogState", nextLog, true);
+        // DialogueState → DialogueState 切换不走 StateMachine（避免同面板类型在同帧内
+        // 创建+销毁导致的消失问题），直接在当前状态内替换对话数据。
+        nowDialogue = nextLog;
+        index = 0;
+        DiaLogueEventDefine.ShowUI.SendEventMessage(nowDialogue.speakers, nowDialogue.hasBackground, nowDialogue.BackGround, nowDialogue.hasReturnButton);
+        var dialogue = nowDialogue.dialogues[index];
+        DiaLogueEventDefine.UpdateUI.SendEventMessage(dialogue.leftSpeakerIndex, dialogue.rightSpeakerIndex, dialogue.text, dialogue.talkingSpeaker,
+            dialogue.dialogueType, dialogue.cgImage, dialogue.showDialogueBox);
     }
 
     private void StartBattle()

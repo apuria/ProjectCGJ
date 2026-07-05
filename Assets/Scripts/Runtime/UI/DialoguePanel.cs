@@ -249,90 +249,136 @@ public class DialoguePanel : BasePanel
 
     /// <summary>
     /// 人物对话模式：设置左右角色立绘和名字（含高亮/变暗）
+    /// 规则：
+    /// 1. 当角色索引为 -1，或当前索引没有角色时，不显示名字和立绘
+    /// 2. 当角色没有立绘但有名字时，只显示名字
     /// </summary>
     private void UpdateRoleArtAndNames(DiaLogueEventDefine.UpdateUI updateUI)
     {
-        // 设置左侧角色
-        if(updateUI.leftRoleIndex >= 0 && updateUI.leftRoleIndex < speakers.Count)
+        if (speakers == null)
         {
-            var leftSpeaker = speakers[updateUI.leftRoleIndex];
-            bool hasArt = leftSpeaker?.CharaArtwork != null;
-            leftRoleBg.gameObject.SetActive(hasArt);
-            leftRole.gameObject.SetActive(hasArt);
-            leftRoleName.gameObject.SetActive(leftSpeaker != null);
-            if (hasArt)
-                leftRole.sprite = leftSpeaker.CharaArtwork;
-            if (leftSpeaker != null)
-                leftRoleName.text = leftSpeaker.name;
-            leftRole.color = updateUI.speaker == TalkingSpeaker.Left ? Color.white : Color.gray;
-            leftRoleName.color = updateUI.speaker == TalkingSpeaker.Left ? Color.white : Color.gray;
-        }
-        else
-        {
-            leftRoleBg.gameObject.SetActive(false);
-            leftRole.gameObject.SetActive(false);
-            leftRoleName.gameObject.SetActive(false);
+            HideAllRoleUI();
+            return;
         }
 
+        // 设置左侧角色
+        ApplyRoleArtAndName(
+            updateUI.leftRoleIndex,
+            updateUI.speaker == TalkingSpeaker.Left,
+            leftRoleBg, leftRole, leftRoleName);
+
         // 设置右侧角色
-        if(updateUI.rightRoleIndex >= 0 && updateUI.rightRoleIndex < speakers.Count)
+        ApplyRoleArtAndName(
+            updateUI.rightRoleIndex,
+            updateUI.speaker == TalkingSpeaker.Right,
+            rightRoleBg, rightRole, rightRoleName);
+    }
+
+    /// <summary>
+    /// 为单侧角色设置立绘和名字
+    /// </summary>
+    /// <param name="roleIndex">角色在 speakers 列表中的索引，-1 表示无角色</param>
+    /// <param name="isTalking">该侧是否为当前说话方，用于高亮判断</param>
+    /// <param name="roleBg">立绘背景 Image</param>
+    /// <param name="roleArt">立绘 Image</param>
+    /// <param name="roleName">名字 TextMeshProUGUI</param>
+    private void ApplyRoleArtAndName(int roleIndex, bool isTalking, Image roleBg, Image roleArt, TextMeshProUGUI roleName)
+    {
+        // 规则1：索引为 -1 或 speakers 中无此角色 → 隐藏名字和立绘
+        Speaker speaker = GetSpeaker(roleIndex);
+        if (speaker == null)
         {
-            var rightSpeaker = speakers[updateUI.rightRoleIndex];
-            bool hasArt = rightSpeaker?.CharaArtwork != null;
-            rightRoleBg.gameObject.SetActive(hasArt);
-            rightRole.gameObject.SetActive(hasArt);
-            rightRoleName.gameObject.SetActive(rightSpeaker != null);
-            if (hasArt)
-                rightRole.sprite = rightSpeaker.CharaArtwork;
-            if (rightSpeaker != null)
-                rightRoleName.text = rightSpeaker.name;
-            rightRole.color = updateUI.speaker == TalkingSpeaker.Right ? Color.white : Color.gray;
-            rightRoleName.color = updateUI.speaker == TalkingSpeaker.Right ? Color.white : Color.gray;
+            roleBg.gameObject.SetActive(false);
+            roleArt.gameObject.SetActive(false);
+            roleName.gameObject.SetActive(false);
+            return;
         }
-        else
+
+        // 规则2：有角色 → 根据是否有立绘分别处理
+        bool hasArt = speaker.CharaArtwork != null;
+        roleBg.gameObject.SetActive(hasArt);
+        roleArt.gameObject.SetActive(hasArt);
+        if (hasArt)
         {
-            rightRoleBg.gameObject.SetActive(false);
-            rightRole.gameObject.SetActive(false);
-            rightRoleName.gameObject.SetActive(false);
+            roleArt.sprite = speaker.CharaArtwork;
         }
+
+        // 名字：有名字则显示
+        bool hasName = !string.IsNullOrEmpty(speaker.name);
+        roleName.gameObject.SetActive(hasName);
+        if (hasName)
+        {
+            roleName.text = speaker.name;
+        }
+
+        // 高亮/变暗：当前说话侧高亮，另一侧变暗
+        Color tint = isTalking ? Color.white : Color.gray;
+        roleArt.color = tint;
+        roleName.color = tint;
+    }
+
+    /// <summary>
+    /// 根据索引安全获取 Speaker，索引为 -1 或越界返回 null
+    /// </summary>
+    private Speaker GetSpeaker(int index)
+    {
+        if (speakers == null || index < 0 || index >= speakers.Count)
+            return null;
+        return speakers[index];
     }
 
     /// <summary>
     /// CG 对话模式：仅显示角色名字（不显示立绘），含高亮/变暗
+    /// 规则：
+    /// 1. 当角色索引为 -1，或当前索引没有角色时，不显示名字
+    /// 2. 当角色没有立绘但有名字时，只显示名字（CG 模式下立绘始终隐藏）
     /// </summary>
     private void UpdateRoleNames(DiaLogueEventDefine.UpdateUI updateUI)
     {
-        // 左侧角色名字
-        if (updateUI.leftRoleIndex >= 0 && updateUI.leftRoleIndex < speakers.Count)
-        {
-            var leftSpeaker = speakers[updateUI.leftRoleIndex];
-            leftRoleName.gameObject.SetActive(leftSpeaker != null);
-            if (leftSpeaker != null)
-            {
-                leftRoleName.text = leftSpeaker.name;
-                leftRoleName.color = updateUI.speaker == TalkingSpeaker.Left ? Color.white : Color.gray;
-            }
-        }
-        else
+        if (speakers == null)
         {
             leftRoleName.gameObject.SetActive(false);
+            rightRoleName.gameObject.SetActive(false);
+            return;
         }
 
+        // 左侧角色名字
+        ApplyRoleNameOnly(updateUI.leftRoleIndex, updateUI.speaker == TalkingSpeaker.Left, leftRoleName);
+
         // 右侧角色名字
-        if (updateUI.rightRoleIndex >= 0 && updateUI.rightRoleIndex < speakers.Count)
+        ApplyRoleNameOnly(updateUI.rightRoleIndex, updateUI.speaker == TalkingSpeaker.Right, rightRoleName);
+    }
+
+    /// <summary>
+    /// 为单侧角色仅设置名字（CG 模式用，不显示立绘）
+    /// </summary>
+    private void ApplyRoleNameOnly(int roleIndex, bool isTalking, TextMeshProUGUI roleName)
+    {
+        // 规则1：索引为 -1 或 speakers 中无此角色 → 隐藏名字
+        Speaker speaker = GetSpeaker(roleIndex);
+        if (speaker == null || string.IsNullOrEmpty(speaker.name))
         {
-            var rightSpeaker = speakers[updateUI.rightRoleIndex];
-            rightRoleName.gameObject.SetActive(rightSpeaker != null);
-            if (rightSpeaker != null)
-            {
-                rightRoleName.text = rightSpeaker.name;
-                rightRoleName.color = updateUI.speaker == TalkingSpeaker.Right ? Color.white : Color.gray;
-            }
+            roleName.gameObject.SetActive(false);
+            return;
         }
-        else
-        {
-            rightRoleName.gameObject.SetActive(false);
-        }
+
+        // 规则2：有名字 → 显示（CG 模式下立绘已在 HandleCGDialogue 中统一隐藏）
+        roleName.gameObject.SetActive(true);
+        roleName.text = speaker.name;
+        roleName.color = isTalking ? Color.white : Color.gray;
+    }
+
+    /// <summary>
+    /// 隐藏所有角色 UI（立绘背景、立绘、名字）
+    /// </summary>
+    private void HideAllRoleUI()
+    {
+        leftRoleBg.gameObject.SetActive(false);
+        leftRole.gameObject.SetActive(false);
+        leftRoleName.gameObject.SetActive(false);
+        rightRoleBg.gameObject.SetActive(false);
+        rightRole.gameObject.SetActive(false);
+        rightRoleName.gameObject.SetActive(false);
     }
 
 #endregion

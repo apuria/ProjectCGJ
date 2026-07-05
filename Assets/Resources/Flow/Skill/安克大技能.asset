@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdfcedb139d87b0479287f98e779df5e, type: 3}
+  m_Name: "\u5B89\u514B\u5927\u6280\u80FD"
+  m_EditorClassIdentifier: 
+  skillName: 
+  skillIcon: {fileID: 0}
+  skillDescription: 
+  Damage: 1.5
+  mpCost: 50
+  isAOE: 0
+  targetType: 0
+  hasBuff: 0
+  buff: {fileID: 0}
+  attackEffect: {fileID: 0}
+  hitEffect: {fileID: 1144018903336257139, guid: df3fcdc45fcb6ed44bbe99756c451f45, type: 3}
+  sfxName: 

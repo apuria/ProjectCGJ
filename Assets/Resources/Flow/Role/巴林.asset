@@ -13,24 +13,25 @@ MonoBehaviour:
   m_Name: "\u5DF4\u6797"
   m_EditorClassIdentifier: 
   Name: 
-  avatar: {fileID: 0}
-  icon: {fileID: 0}
+  avatar: {fileID: -379682510, guid: 4581f1bf7bcd4304e9780e6bca01b0d9, type: 3}
+  icon: {fileID: -379682510, guid: 4581f1bf7bcd4304e9780e6bca01b0d9, type: 3}
   scale: 1
   attack:
-    value: 0
+    value: 5
   maxHp:
-    value: 0
+    value: 60
   hp:
-    value: 0
+    value: 60
   maxMp:
-    value: 0
+    value: 150
   mp:
-    value: 0
+    value: 150
   speed:
-    value: 0
-  skills: []
+    value: 5
+  skills:
+  - {fileID: 11400000, guid: 96aa8f22896290c44b3e36c2b7d70523, type: 2}
   ultimateSkill: {fileID: 0}
-  normalAttack: {fileID: 0}
+  normalAttack: {fileID: 11400000, guid: 7f56c06740220d34ba644b66aec4af90, type: 2}
   shieldValue:
-    value: 0
-  CloseUp: {fileID: 0}
+    value: 5
+  CloseUp: {fileID: 1747987798, guid: 7d9f16079700c1446a2f30e7d335ef0c, type: 3}

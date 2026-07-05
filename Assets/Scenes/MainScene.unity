@@ -182,10 +182,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
   loadingTexts: {fileID: 11400000, guid: 5dd560b678cb1c148943a2b907539a49, type: 2}
-  mainRole: {fileID: 11400000, guid: 8125f260649da1e4fb135a5c4f637f63, type: 2}
+  mainRole: {fileID: 11400000, guid: 4efde233093b38442a7ae82270dfa54d, type: 2}
   roleList:
-  - {fileID: 11400000, guid: 474318331fd6f6243a7899c4bd38e1ec, type: 2}
-  - {fileID: 11400000, guid: 7d7f0b20415820a489b5df8988bea84a, type: 2}
+  - {fileID: 11400000, guid: 4cfd370485ccfc74c9363ed26b7da42e, type: 2}
+  - {fileID: 11400000, guid: ab77adbfb3ec8e74bb7564ff83f89737, type: 2}
   hasStartEvent: 1
   hasEndEvent: 0
   StartNode:
@@ -193,7 +193,7 @@ MonoBehaviour:
     stateType: 1
     icon: {fileID: 0}
     battleSetting: {fileID: 0}
-    dialogueSetting: {fileID: 11400000, guid: 33c68d31d007839488634985f426a0ab, type: 2}
+    dialogueSetting: {fileID: 11400000, guid: 56d384d162a59b74dbf844558996db7f, type: 2}
     branchSetting: {fileID: 0}
   EndNode:
     nodeName: 
@@ -227,13 +227,13 @@ MonoBehaviour:
     battleSetting: {fileID: 0}
     dialogueSetting: {fileID: 11400000, guid: 7b98a085cb6db9a4b88046bbb8d5948c, type: 2}
     branchSetting: {fileID: 0}
-  - nodeName: Node 4
+  - nodeName: Node 5
     stateType: 1
     icon: {fileID: 2143177767, guid: ff75803f119264343b956b866c7e505d, type: 3}
     battleSetting: {fileID: 0}
-    dialogueSetting: {fileID: 11400000, guid: 79bf98b3aeccbe9499633a005a4d0073, type: 2}
+    dialogueSetting: {fileID: 11400000, guid: 45fba20b2099aba4e91d95a34cc8072b, type: 2}
     branchSetting: {fileID: 0}
-  - nodeName: Node 4
+  - nodeName: Node 6
     stateType: 1
     icon: {fileID: 2143177767, guid: ff75803f119264343b956b866c7e505d, type: 3}
     battleSetting: {fileID: 0}

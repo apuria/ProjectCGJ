@@ -13,23 +13,23 @@ MonoBehaviour:
   m_Name: "\u54E5\u5E03\u6797"
   m_EditorClassIdentifier: 
   Name: 
-  avatar: {fileID: 0}
-  icon: {fileID: 0}
+  avatar: {fileID: -1480482415, guid: 46a4acaa883683640a592fa73d883470, type: 3}
+  icon: {fileID: -1480482415, guid: 46a4acaa883683640a592fa73d883470, type: 3}
   scale: 1
   attack:
-    value: 0
+    value: 12
   maxHp:
-    value: 0
+    value: 40
   hp:
-    value: 0
+    value: 40
   maxMp:
     value: 0
   mp:
     value: 0
   speed:
-    value: 0
+    value: 8
   skills: []
   ultimateSkill: {fileID: 0}
-  normalAttack: {fileID: 0}
+  normalAttack: {fileID: 11400000, guid: 7f56c06740220d34ba644b66aec4af90, type: 2}
   shieldValue:
-    value: 0
+    value: 5

@@ -22,7 +22,7 @@ MonoBehaviour:
   - name: "\u5DF4\u6797"
     CharaArtwork: {fileID: 21300000, guid: fe939482d61935f4989a7e65b4c5ba3b, type: 3}
   - name: "\u8389\u6069"
-    CharaArtwork: {fileID: 0}
+    CharaArtwork: {fileID: 495789100, guid: d233d63ec16958e49b4cd1b24196c4ac, type: 3}
   dialogues:
   - dialogueType: 1
     cgImage: {fileID: 0}

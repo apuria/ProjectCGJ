@@ -15,10 +15,16 @@ MonoBehaviour:
   bgmName: 
   Background: {fileID: 0}
   enemies:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  moreItemBranches: []
+  - {fileID: 11400000, guid: 87728aeb2c3f03944aa32f81ea21ad04, type: 2}
+  - {fileID: 11400000, guid: cf3f9ad108ee55e4c9d5fbd85f35dbf0, type: 2}
+  - {fileID: 11400000, guid: 87728aeb2c3f03944aa32f81ea21ad04, type: 2}
+  moreItemBranches:
+  - branchId: 
+    choose: 
+    buffInfo: {fileID: 11400000, guid: 6a07439d224270e40b8975e10052fbb0, type: 2}
+    isForAllRole: 1
+    roleIndex: 0
+    isEveryRound: 1
   moreRoleBranches:
   - roleIndex: 0
     branchId: 

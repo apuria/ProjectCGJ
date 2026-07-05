@@ -30,6 +30,6 @@ MonoBehaviour:
     value: 0
   skills: []
   ultimateSkill: {fileID: 0}
-  normalAttack: {fileID: 0}
+  normalAttack: {fileID: 11400000, guid: 7f56c06740220d34ba644b66aec4af90, type: 2}
   shieldValue:
-    value: 0
+    value: 5

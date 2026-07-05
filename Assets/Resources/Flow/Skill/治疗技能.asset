@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdfcedb139d87b0479287f98e779df5e, type: 3}
+  m_Name: "\u6CBB\u7597\u6280\u80FD"
+  m_EditorClassIdentifier: 
+  skillName: "\u6CBB\u7597"
+  skillIcon: {fileID: 21300000, guid: 3f98a0f363639524291635722ad50207, type: 3}
+  skillDescription: 
+  Damage: 1.2
+  mpCost: 30
+  isAOE: 1
+  targetType: 1
+  hasBuff: 0
+  buff: {fileID: 0}
+  attackEffect: {fileID: 0}
+  hitEffect: {fileID: 3106680952780310086, guid: 230234f890125b24496e0a9947060870, type: 3}
+  sfxName: 

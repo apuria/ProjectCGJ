@@ -14,13 +14,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgmName: 
   Background: {fileID: 0}
-  enemies: []
-  moreItemBranches: []
-  moreRoleBranches: []
+  enemies:
+  - {fileID: 11400000, guid: 3bf6df3bc0ddf224c996a7a36cffd581, type: 2}
+  - {fileID: 11400000, guid: 8e930cf18f159884f9bb112b9bbe2515, type: 2}
+  - {fileID: 11400000, guid: 3bf6df3bc0ddf224c996a7a36cffd581, type: 2}
+  moreItemBranches:
+  - branchId: 
+    choose: 
+    buffInfo: {fileID: 11400000, guid: 6a07439d224270e40b8975e10052fbb0, type: 2}
+    isForAllRole: 1
+    roleIndex: 0
+    isEveryRound: 1
+  - branchId: 
+    choose: 
+    buffInfo: {fileID: 11400000, guid: cd5ed140d0563ba4e8f05c8ad82b7278, type: 2}
+    isForAllRole: 1
+    roleIndex: 0
+    isEveryRound: 0
+  moreRoleBranches:
+  - roleIndex: 0
+    branchId: 
+    choose: 
+  - roleIndex: 1
+    branchId: 
+    choose: 
   startEvent: 0
   startDialogue: {fileID: 0}
   startBranch: {fileID: 0}
-  winEvent: 0
+  winEvent: 5
   winDialogue: {fileID: 0}
   winBranch: {fileID: 0}
   loseEvent: 0
