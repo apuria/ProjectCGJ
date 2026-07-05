@@ -219,13 +219,13 @@ MonoBehaviour:
     stateType: 1
     icon: {fileID: -441503911, guid: ff75803f119264343b956b866c7e505d, type: 3}
     battleSetting: {fileID: 0}
-    dialogueSetting: {fileID: 11400000, guid: 79bf98b3aeccbe9499633a005a4d0073, type: 2}
+    dialogueSetting: {fileID: 11400000, guid: 9554134780c03c74584c3f75cd34eaf3, type: 2}
     branchSetting: {fileID: 0}
   - nodeName: Node 4
     stateType: 1
     icon: {fileID: 2143177767, guid: ff75803f119264343b956b866c7e505d, type: 3}
     battleSetting: {fileID: 0}
-    dialogueSetting: {fileID: 11400000, guid: 79bf98b3aeccbe9499633a005a4d0073, type: 2}
+    dialogueSetting: {fileID: 11400000, guid: 7b98a085cb6db9a4b88046bbb8d5948c, type: 2}
     branchSetting: {fileID: 0}
   - nodeName: Node 4
     stateType: 1

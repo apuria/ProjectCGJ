@@ -15,9 +15,9 @@ MonoBehaviour:
   bgmName: 
   Background: {fileID: 0}
   enemies:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 21d156ee475ad1a479074f972282ca99, type: 2}
+  - {fileID: 11400000, guid: 21d156ee475ad1a479074f972282ca99, type: 2}
+  - {fileID: 11400000, guid: 21d156ee475ad1a479074f972282ca99, type: 2}
   moreItemBranches: []
   moreRoleBranches:
   - roleIndex: 0
