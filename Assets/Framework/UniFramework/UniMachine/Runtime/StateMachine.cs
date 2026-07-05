@@ -115,6 +115,28 @@ namespace UniFramework.Machine
                 return;
             }
 
+            // 先清理与目标 tag 同名的旧节点，再创建新节点。
+            // 否则新节点 OnCreate（ShowPanel）复用旧面板后，旧节点 OnDispose（HidePanel）把同一面板销毁。
+            if (_suspendedNodes.TryGetValue(tag, out var oldSuspended))
+            {
+                UniLogger.Log($"Destroy suspended node with same tag before switch: {tag}");
+                oldSuspended.OnDispose();
+                _suspendedNodes.Remove(tag);
+            }
+
+            // 当前节点与目标 tag 同名且要销毁时，也提前 dispose。
+            // 典型场景：DialogueState("LogState") → DialogueState("LogState")，
+            // 新旧状态共用同一面板类型，必须在创建新节点前清理旧节点的面板。
+            bool earlyDisposed = false;
+            if (destroy && _curNodeTag == tag)
+            {
+                UniLogger.Log($"Destroy current node '{_curNodeTag}' before creating new node with same tag");
+                _curNode.OnExit();
+                _curNode.OnDispose();
+                _navStack.Push(_curNodeTag);
+                earlyDisposed = true;
+            }
+
             var node = new TState();
             node.OnCreate(this, data);
 
@@ -122,30 +144,26 @@ namespace UniFramework.Machine
             string savedInfo = destroy ? "" : $", saved '{_curNodeTag}'";
             UniLogger.Log($"{_curNodeTag} --> {tag} ({mode} mode{savedInfo})");
 
-            // 退出当前节点
-            _curNode.OnExit();
-
-            // 如果目标在挂起池中，先销毁旧的挂起节点（同名事件触发时销毁旧节点）
-            if (_suspendedNodes.TryGetValue(tag, out var oldSuspended))
+            if (!earlyDisposed)
             {
-                UniLogger.Log($"Destroy suspended node with same tag: {tag}");
-                oldSuspended.OnDispose();
-                _suspendedNodes.Remove(tag);
+                // 退出当前节点
+                _curNode.OnExit();
+
+                if (!destroy)
+                {
+                    // 挂起当前节点，存入字典以备恢复
+                    _suspendedNodes[_curNodeTag] = _curNode;
+                }
+                else
+                {
+                    // 销毁当前节点
+                    _curNode.OnDispose();
+                }
+
+                // 将当前节点 Tag 推入导航栈，供后续 BackToPrevState 回溯
+                _navStack.Push(_curNodeTag);
             }
 
-            if (!destroy)
-            {
-                // 挂起当前节点，存入字典以备恢复
-                _suspendedNodes[_curNodeTag] = _curNode;
-            }
-            else
-            {
-                // 销毁当前节点
-                _curNode.OnDispose();
-            }
-
-            // 将当前节点 Tag 推入导航栈，供后续 BackToPrevState 回溯
-            _navStack.Push(_curNodeTag);
             _curNode = node;
             _curNodeTag = tag;
 

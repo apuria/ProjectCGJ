@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 646abc57e6d6fe74a9252bafdf104fb7, type: 3}
+  m_Name: "Branch_\u5047\u7ED3\u5C40\u5206\u652F"
+  m_EditorClassIdentifier: 
+  id: "\u505A\u51FA\u4F60\u6700\u540E\u7684\u51B3\u5B9A"
+  branches:
+  - chosen: "\u7EDD\u4E0D\u653E\u5F03\u6211\u7684\u540C\u4F34"
+    text: "\u4E0D\uFF01\u6211\u7EDD\u4E0D\u4F1A\u653E\u5F03\u6211\u7684\u540C\u4F34\uFF01"
+  onEnd: 0
+  nextDialogue: {fileID: 11400000, guid: d36c637bb8a04f149a14c94f33e21c21, type: 2}
+  battleSetting: {fileID: 0}
+  nextBranch: {fileID: 0}
+  endSetting: {fileID: 0}

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d45e8793e655744a8a1169da8fe49bc, type: 3}
+  m_Name: "Battle_\u5206\u652F\u4E8C\u9B54\u738B\u6218"
+  m_EditorClassIdentifier: 
+  bgmName: 
+  Background: {fileID: 0}
+  enemies:
+  - {fileID: 11400000, guid: 21d156ee475ad1a479074f972282ca99, type: 2}
+  moreItemBranches: []
+  moreRoleBranches:
+  - roleIndex: 0
+    branchId: 
+    choose: 
+  - roleIndex: 1
+    branchId: 
+    choose: 
+  startEvent: 0
+  startDialogue: {fileID: 0}
+  startBranch: {fileID: 0}
+  winEvent: 1
+  winDialogue: {fileID: 11400000, guid: 9a2b6109606d2eb44a4fe5fe7719cd45, type: 2}
+  winBranch: {fileID: 0}
+  loseEvent: 1
+  loseDialogue: {fileID: 11400000, guid: 7d58bcffc4368bf46b90c0679650cc00, type: 2}
+  loseBranch: {fileID: 0}
+  winEndSetting: {fileID: 0}
+  loseEndSetting: {fileID: 0}
+  midEvents: []

@@ -17,8 +17,10 @@ public class DialogueState : BaseState
     public override void OnCreate(StateMachine machine, IStateData data)
     {
         base.OnCreate(machine, data);
+        nowDialogue = null;
         nowDialogue = data as DialogueSetting;
         UIMgr.Instance.ShowPanel<DialoguePanel>(isSync: true);
+        index = 0;
     }
 
     public override void OnEnter()
@@ -101,19 +103,11 @@ public class DialogueState : BaseState
 
     private void NextDialogue()
     {
-        //如果是最后一个对话，则回到上一个状态
-        if(index == nowDialogue.dialogues.Count - 1)
-        {
-            GoBackToLastState();
-        }
-        else
-        {
-            index++;
-            // 更新对话面板
-            var dialogue = nowDialogue.dialogues[index];
-            DiaLogueEventDefine.UpdateUI.SendEventMessage(dialogue.leftSpeakerIndex, dialogue.rightSpeakerIndex, dialogue.text, dialogue.talkingSpeaker,
-                dialogue.dialogueType, dialogue.cgImage, dialogue.showDialogueBox);
-        }
+        index++;
+        // 更新对话面板
+        var dialogue = nowDialogue.dialogues[index];
+        DiaLogueEventDefine.UpdateUI.SendEventMessage(dialogue.leftSpeakerIndex, dialogue.rightSpeakerIndex, dialogue.text, dialogue.talkingSpeaker,
+            dialogue.dialogueType, dialogue.cgImage, dialogue.showDialogueBox);
     }
 
     private void NextLogDialogue()
@@ -125,14 +119,10 @@ public class DialogueState : BaseState
             GoBackToLastState();
             return;
         }
-        // 不创建新的 DialogueState，直接在当前状态内替换对话数据
-        // 避免 OnCreate(ShowPanel) → OnDispose(HidePanel) 导致面板被错误销毁
-        nowDialogue = nextLog;
-        index = 0;
-        DiaLogueEventDefine.ShowUI.SendEventMessage(nowDialogue.speakers, nowDialogue.hasBackground, nowDialogue.BackGround, nowDialogue.hasReturnButton);
-        var dialogue = nowDialogue.dialogues[index];
-        DiaLogueEventDefine.UpdateUI.SendEventMessage(dialogue.leftSpeakerIndex, dialogue.rightSpeakerIndex, dialogue.text, dialogue.talkingSpeaker,
-            dialogue.dialogueType, dialogue.cgImage, dialogue.showDialogueBox);
+        // StateMachine.SwitchTo 已修复同 tag 切换时的面板生命周期问题：
+        // 当前 DialogueState 会在新 DialogueState.OnCreate 之前被 OnDispose，
+        // 确保新状态创建时 panelDic 已空 → 新建面板，不会被旧状态销毁。
+        StateEventDefine.ChangeState.SendEventMessage<DialogueState>("LogState", nextLog, true);
     }
 
     private void StartBattle()
@@ -150,13 +140,13 @@ public class DialogueState : BaseState
     private void StartBranch()
     {
         //使用状态机切换到分支选项状态
-        StateEventDefine.ChangeState.SendEventMessage<BranchState>("BranchState", nowDialogue.dialogues[index].Branch, false);
+        StateEventDefine.ChangeState.SendEventMessage<BranchState>("BranchState", nowDialogue.dialogues[index].Branch, true);
     }
 
     private void GoBackToMap()
     {
         //使用状态机切换到地图状态
-        StateEventDefine.ChangeState.SendEventMessage<MapState>("MapState");
+        StateEventDefine.ChangeState.SendEventMessage<MapState>("MapState", null,true);
     }
 
     private void EndBranch()

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f434b3083196f624aa9753f5c881b5ab, type: 3}
+  m_Name: "BranchDialogue_\u6DF7\u6C8C\u5206\u652F"
+  m_EditorClassIdentifier: 
+  endBranches:
+  - branches:
+    - index: "\u6DF7\u6C8C"
+      chosen: "\u62E5\u62B1\u6DF7\u6C8C"
+    Setting: {fileID: 11400000, guid: 7801a203b518d1a4fbdee354d39b8660, type: 2}
+  - branches:
+    - index: "\u6DF7\u6C8C"
+      chosen: "\u62D2\u7EDD\u6DF7\u6C8C"
+    Setting: {fileID: 11400000, guid: d36c637bb8a04f149a14c94f33e21c21, type: 2}

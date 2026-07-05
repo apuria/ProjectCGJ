@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 646abc57e6d6fe74a9252bafdf104fb7, type: 3}
+  m_Name: "Branch_\u6DF7\u6C8C\u5206\u652F"
+  m_EditorClassIdentifier: 
+  id: "\u6DF7\u6C8C"
+  branches:
+  - chosen: "\u62E5\u62B1\u6DF7\u6C8C"
+    text: "\u6210\u4E3A\u6DF7\u6C8C\u7684\u7737\u5C5E\uFF0C\u83B7\u5F97\u51FB\u8D25\u56DE\u6EAF\u9B54\u738B\u5F97\u5230\u529B\u91CF\uFF0C\u72EC\u5360\u6240\u6709\u7684\u8363\u8A89\u548C\u8D22\u5BCC\u3002"
+  - chosen: "\u62D2\u7EDD\u6DF7\u6C8C"
+    text: "\u6211\u8981\u548C\u540C\u4F34\u5F00\u521B\u672A\u6765\u3002"
+  onEnd: 7
+  nextDialogue: {fileID: 0}
+  battleSetting: {fileID: 0}
+  nextBranch: {fileID: 0}
+  endSetting: {fileID: 11400000, guid: e7ab2e2c1cd741d45a97505f87249adc, type: 2}
