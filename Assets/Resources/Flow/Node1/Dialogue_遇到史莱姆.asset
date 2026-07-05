@@ -12,10 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030013200b5fac74bbd9b89d55fbb568, type: 3}
   m_Name: "Dialogue_\u9047\u5230\u53F2\u83B1\u59C6"
   m_EditorClassIdentifier: 
+  bgmName: 
   hasReturnButton: 0
   hasBackground: 1
   BackGround: {fileID: 21300000, guid: 26b6a4e5c9ac85d45a04b7c31379f045, type: 3}
   speakers:
   - name: 
     CharaArtwork: {fileID: 0}
-  dialogues: []
+  dialogues:
+  - dialogueType: 0
+    cgImage: {fileID: 0}
+    showDialogueBox: 0
+    leftSpeakerIndex: 0
+    rightSpeakerIndex: 0
+    talkingSpeaker: 0
+    text: 
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}

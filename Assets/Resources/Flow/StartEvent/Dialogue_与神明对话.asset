@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030013200b5fac74bbd9b89d55fbb568, type: 3}
   m_Name: "Dialogue_\u4E0E\u795E\u660E\u5BF9\u8BDD"
   m_EditorClassIdentifier: 
+  bgmName: 
   hasReturnButton: 0
   hasBackground: 0
   BackGround: {fileID: 0}
   speakers:
   - name: "\u5B89\u514B"
-    CharaArtwork: {fileID: 21300000, guid: 06624ab4412b9c14e8a88b282f446adc, type: 3}
+    CharaArtwork: {fileID: 1997713814, guid: 02943381274cb3d489588ac2638b13e7, type: 3}
   - name: "\u795E\u660E"
-    CharaArtwork: {fileID: 21300000, guid: 273188e39e858be4b94ae2f0d72cda04, type: 3}
+    CharaArtwork: {fileID: 21300000, guid: 872945362fa5ad041bbc037b2cd6bd08, type: 3}
   dialogues:
   - dialogueType: 0
     cgImage: {fileID: 0}
@@ -184,8 +185,8 @@ MonoBehaviour:
     rightSpeakerIndex: 1
     talkingSpeaker: 1
     text: "\u5C31\u8FD9\u6837\u54AF\uFF0C886"
-    onEnd: 3
+    onEnd: 5
     Battle: {fileID: 0}
-    Branch: {fileID: 11400000, guid: 3db1b2d6ef3a3424b9f019bd2f2d1854, type: 2}
+    Branch: {fileID: 0}
     NextLog: {fileID: 0}
     End: {fileID: 0}
