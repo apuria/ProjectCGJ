@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6845448b4b1de84f9f9e67696af3c1b, type: 3}
   m_Name: "\u53F2\u83B1\u59C6"
   m_EditorClassIdentifier: 
-  Name: 
+  Name: "\u53F2\u83B1\u59C6"
   avatar: {fileID: 746153616, guid: c99e10819b9f9594e9c19df30db35d19, type: 3}
   icon: {fileID: 746153616, guid: c99e10819b9f9594e9c19df30db35d19, type: 3}
-  scale: 1
+  scale: 0.7
   attack:
     value: 8
   maxHp:

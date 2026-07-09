@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: -379682510, guid: 4581f1bf7bcd4304e9780e6bca01b0d9, type: 3}
   scale: 1
   attack:
-    value: 5
+    value: 15
   maxHp:
     value: 60
   hp:

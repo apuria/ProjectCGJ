@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdfcedb139d87b0479287f98e779df5e, type: 3}
   m_Name: "\u523A\u5BA2\u6280\u80FD"
   m_EditorClassIdentifier: 
-  skillName: 
-  skillIcon: {fileID: 0}
+  skillName: "\u8FDE\u7EED\u65A9\u51FB"
+  skillIcon: {fileID: 21300000, guid: cf744018da899cc4fa00e3c563f392fc, type: 3}
   skillDescription: 
   Damage: 1.2
   mpCost: 30

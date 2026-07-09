@@ -12,23 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6845448b4b1de84f9f9e67696af3c1b, type: 3}
   m_Name: Boss
   m_EditorClassIdentifier: 
-  Name: 
-  avatar: {fileID: 0}
-  icon: {fileID: 0}
-  scale: 1
+  Name: "\u9B54\u738B"
+  avatar: {fileID: 21300000, guid: b7e045b68e0c31548b4dfdbef03f62be, type: 3}
+  icon: {fileID: 21300000, guid: b7e045b68e0c31548b4dfdbef03f62be, type: 3}
+  scale: 2.5
   attack:
-    value: 0
+    value: 12
   maxHp:
-    value: 0
+    value: 1000
   hp:
-    value: 0
+    value: 1000
   maxMp:
     value: 0
   mp:
     value: 0
   speed:
-    value: 0
-  skills: []
+    value: 12
+  skills:
+  - {fileID: 11400000, guid: 3f5c00492a804f546a5320858f71f63f, type: 2}
   ultimateSkill: {fileID: 0}
   normalAttack: {fileID: 11400000, guid: 7f56c06740220d34ba644b66aec4af90, type: 2}
   shieldValue:

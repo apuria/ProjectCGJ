@@ -21,6 +21,18 @@ MonoBehaviour:
     CharaArtwork: {fileID: 1997713814, guid: 02943381274cb3d489588ac2638b13e7, type: 3}
   dialogues:
   - dialogueType: 1
+    cgImage: {fileID: 21300000, guid: ff47a13a891398e4e84be2f2b4165dad, type: 3}
+    showDialogueBox: 0
+    leftSpeakerIndex: -1
+    rightSpeakerIndex: -1
+    talkingSpeaker: 0
+    text: "\u597D\u50CF\u505A\u4E86\u4E00\u573A\u68A6\uFF0C\u6709\u4EC0\u4E48\u4E1C\u897F\u88AB\u6211\u9057\u5FD8\u6389\u4E86\uFF0C\u4E0D\u8FC7\u773C\u524D\u5C31\u662F\u9B54\u738B\u57CE\u4E86\u3002\u6CA1\u65F6\u95F4\u7EC6\u60F3\u4E86\uFF0C\u6211\u5FC5\u987B\u8D76\u7D27\u8BA8\u4F10\u9B54\u738B"
+    onEnd: 0
+    Battle: {fileID: 0}
+    Branch: {fileID: 0}
+    NextLog: {fileID: 0}
+    End: {fileID: 0}
+  - dialogueType: 1
     cgImage: {fileID: 0}
     showDialogueBox: 0
     leftSpeakerIndex: -1

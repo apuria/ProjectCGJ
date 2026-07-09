@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdfcedb139d87b0479287f98e779df5e, type: 3}
   m_Name: "\u9B54\u738B\u6280\u80FD"
   m_EditorClassIdentifier: 
-  skillName: 
+  skillName: "\u7834\u706D\u6B7B\u5149"
   skillIcon: {fileID: 0}
   skillDescription: 
-  Damage: 1.4
+  Damage: 2
   mpCost: 0
   isAOE: 0
   targetType: 0

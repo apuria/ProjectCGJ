@@ -25,7 +25,7 @@ MonoBehaviour:
     isEveryRound: 1
   - branchId: 
     choose: 
-    buffInfo: {fileID: 11400000, guid: cd5ed140d0563ba4e8f05c8ad82b7278, type: 2}
+    buffInfo: {fileID: 11400000, guid: c3d65a1d45e8eaf45a61b97312713b8d, type: 2}
     isForAllRole: 1
     roleIndex: 0
     isEveryRound: 0

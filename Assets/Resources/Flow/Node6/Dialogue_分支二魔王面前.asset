@@ -20,7 +20,7 @@ MonoBehaviour:
   - name: "\u5B89\u514B"
     CharaArtwork: {fileID: 1997713814, guid: 02943381274cb3d489588ac2638b13e7, type: 3}
   - name: "\u9B54\u738B"
-    CharaArtwork: {fileID: 0}
+    CharaArtwork: {fileID: 800851447, guid: f56cabcac1dc2a14eaf30770009b56d1, type: 3}
   dialogues:
   - dialogueType: 0
     cgImage: {fileID: 0}

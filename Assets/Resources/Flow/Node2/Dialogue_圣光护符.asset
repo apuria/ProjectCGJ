@@ -20,7 +20,7 @@ MonoBehaviour:
   - name: "\u5B89\u514B"
     CharaArtwork: {fileID: 1997713814, guid: 02943381274cb3d489588ac2638b13e7, type: 3}
   - name: "\u5DF4\u6797"
-    CharaArtwork: {fileID: 1997713814, guid: 02943381274cb3d489588ac2638b13e7, type: 3}
+    CharaArtwork: {fileID: 21300000, guid: fe939482d61935f4989a7e65b4c5ba3b, type: 3}
   - name: "\u795E\u660E"
     CharaArtwork: {fileID: 0}
   dialogues:
@@ -43,30 +43,6 @@ MonoBehaviour:
     rightSpeakerIndex: 1
     talkingSpeaker: 0
     text: "\uFF08\u4F4E\u5934\uFF0C\u7136\u540E\u8E72\u4E0B\uFF09\u5927\u53D4\uFF0C\u6211\u6B64\u884C\u5C31\u662F\u4E3A\u4E86\u51FB\u8D25\u9B54\u738B\uFF0C\u62EF\u6551\u5927\u5BB6"
-    onEnd: 0
-    Battle: {fileID: 0}
-    Branch: {fileID: 0}
-    NextLog: {fileID: 0}
-    End: {fileID: 0}
-  - dialogueType: 0
-    cgImage: {fileID: 0}
-    showDialogueBox: 0
-    leftSpeakerIndex: 0
-    rightSpeakerIndex: 1
-    talkingSpeaker: 0
-    text: "\uFF08\u4F4E\u5934\uFF0C\u7136\u540E\u8E72\u4E0B\uFF09\u5927\u53D4\uFF0C\u6211\u6B64\u884C\u5C31\u662F\u4E3A\u4E86\u51FB\u8D25\u9B54\u738B\uFF0C\u62EF\u6551\u5927\u5BB6"
-    onEnd: 0
-    Battle: {fileID: 0}
-    Branch: {fileID: 0}
-    NextLog: {fileID: 0}
-    End: {fileID: 0}
-  - dialogueType: 0
-    cgImage: {fileID: 0}
-    showDialogueBox: 0
-    leftSpeakerIndex: 0
-    rightSpeakerIndex: 1
-    talkingSpeaker: 1
-    text: "\uFF08\u770B\u7740\u8E72\u4E0B\u7684\u4F60\uFF09\u4F60\u5C0F\u5B50\u61C2\u4E0D\u61C2\u793C\u8C8C\uFF01"
     onEnd: 0
     Battle: {fileID: 0}
     Branch: {fileID: 0}

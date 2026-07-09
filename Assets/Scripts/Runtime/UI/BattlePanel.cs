@@ -165,11 +165,10 @@ public class BattlePanel : BasePanel
             settingPanel.ShowMe();
         });
 
-        // btnRun: 逃跑按钮 → 重新开始战斗（弹出确认对话框）
+        // btnRun: 逃跑按钮 → 重新开始当场战斗
         btnRun.onClick.AddListener(() =>
         {
-            TipPanelEventDefine.ShowTip.SendEventMessage("确定要进行回溯吗？", "确认",
-                () => SceneEventDefine.NodeGame.SendEventMessage(), "取消", null);
+            SceneEventDefine.NodeGame.SendEventMessage();
         });
 
         // btnReturn: 提示确认是否返回地图

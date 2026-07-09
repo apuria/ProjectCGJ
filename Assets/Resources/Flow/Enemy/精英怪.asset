@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6845448b4b1de84f9f9e67696af3c1b, type: 3}
   m_Name: "\u7CBE\u82F1\u602A"
   m_EditorClassIdentifier: 
-  Name: 
+  Name: "\u805A\u5408\u53F2\u83B1\u59C6"
   avatar: {fileID: -1036204248, guid: 5c27b804d87d0b441ab973624941b3e3, type: 3}
   icon: {fileID: -1036204248, guid: 5c27b804d87d0b441ab973624941b3e3, type: 3}
-  scale: 1
+  scale: 1.4
   attack:
     value: 15
   maxHp:
-    value: 80
+    value: 400
   hp:
-    value: 80
+    value: 400
   maxMp:
     value: 0
   mp:
