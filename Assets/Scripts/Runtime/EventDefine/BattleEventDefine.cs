@@ -380,6 +380,18 @@ public class BattleEventDefine : MonoBehaviour
     }
 
     /// <summary>
+    /// 重新开始当场战斗事件（仅重置战斗，不重播开始事件/对话等整个节点流程）
+    /// </summary>
+    public class RestartBattle : IEventMessage
+    {
+        public static void SendEventMessage()
+        {
+            var msg = new RestartBattle();
+            UniEvent.SendMessage(msg);
+        }
+    }
+
+    /// <summary>
     /// 更新行动方UI事件
     /// 传入行动队列（第一顺位为当前行动者），UI 侧从第一顺位类型自行判断阵营
     /// </summary>

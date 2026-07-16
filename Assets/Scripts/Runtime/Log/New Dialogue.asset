@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030013200b5fac74bbd9b89d55fbb568, type: 3}
   m_Name: New Dialogue
   m_EditorClassIdentifier: 
+  bgmName: 
   hasReturnButton: 0
   hasBackground: 1
   BackGround: {fileID: 21300000, guid: 26b6a4e5c9ac85d45a04b7c31379f045, type: 3}
@@ -23,7 +24,7 @@ MonoBehaviour:
   dialogues:
   - dialogueType: 1
     cgImage: {fileID: 0}
-    showDialogueBox: 1
+    showDialogueBox: 0
     leftSpeakerIndex: -1
     rightSpeakerIndex: -1
     talkingSpeaker: 0

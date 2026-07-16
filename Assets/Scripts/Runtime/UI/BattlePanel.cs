@@ -165,10 +165,11 @@ public class BattlePanel : BasePanel
             settingPanel.ShowMe();
         });
 
-        // btnRun: 逃跑按钮 → 重新开始当场战斗
+        // btnRun: 逃跑按钮 → 提示确认后重新开始当场战斗（仅重置战斗，不重启整个节点事件）
         btnRun.onClick.AddListener(() =>
         {
-            SceneEventDefine.NodeGame.SendEventMessage();
+            TipPanelEventDefine.ShowTip.SendEventMessage("确定要重新开始战斗吗？", "确认",
+                () => BattleEventDefine.RestartBattle.SendEventMessage(), "取消", null);
         });
 
         // btnReturn: 提示确认是否返回地图
@@ -1033,7 +1034,7 @@ public class BattlePanel : BasePanel
         else
         {
             TipPanelEventDefine.ShowTip.SendEventMessage("是否重新开始？", "重来",
-                () => SceneEventDefine.NodeGame.SendEventMessage(), "取消",
+                () => BattleEventDefine.RestartBattle.SendEventMessage(), "取消",
                 () => BattleEventDefine.BattleEndConfirm.SendEventMessage());
         }
     }

@@ -122,6 +122,14 @@ public class BattleState : BaseState
         eventGroup.AddListener<BattleEventDefine.RoleMpChange>(OnHandleEventMessage);
         eventGroup.AddListener<BattleEventDefine.BattleEndConfirm>(OnHandleEventMessage);
         eventGroup.AddListener<BattleEventDefine.EnemyActionDelay>(OnHandleEventMessage);
+        eventGroup.AddListener<BattleEventDefine.RestartBattle>(OnHandleEventMessage);
+
+        // 玩家输入事件统一由 BattleState 监听，转发给当前活跃的 PlayerBattleState
+        // （避免 PlayerBattleState 实例切换时监听器残留导致的叠加 bug）
+        eventGroup.AddListener<BattleEventDefine.SelectSkill>(OnHandlePlayerInputEvent);
+        eventGroup.AddListener<BattleEventDefine.SelectEnemy>(OnHandlePlayerInputEvent);
+        eventGroup.AddListener<BattleEventDefine.SelectAlly>(OnHandlePlayerInputEvent);
+        eventGroup.AddListener<BattleEventDefine.PlayerDefend>(OnHandlePlayerInputEvent);
 
         UIMgr.Instance.ShowPanel<BattlePanel>(isSync: true);
     }
@@ -200,6 +208,7 @@ public class BattleState : BaseState
 
     public override void OnDispose()
     {
+        PlayerBattleState.Current = null;
         UIMgr.Instance.HidePanel<BattlePanel>(true);
         base.OnDispose();
     }
@@ -337,6 +346,29 @@ public class BattleState : BaseState
                 }
             }
         }
+        else if(message is BattleEventDefine.RestartBattle)
+        {
+            RestartBattle();
+        }
+    }
+
+    /// <summary>
+    /// 转发玩家输入事件给当前活跃的 PlayerBattleState。
+    /// 统一由 BattleState 监听，避免 PlayerBattleState 实例切换时 EventGroup 残留导致叠加 bug。
+    /// </summary>
+    private void OnHandlePlayerInputEvent(IEventMessage message)
+    {
+        var current = PlayerBattleState.Current;
+        if (current == null) return;
+
+        if (message is BattleEventDefine.SelectSkill skillMsg)
+            current.HandleSelectSkill(skillMsg.skill);
+        else if (message is BattleEventDefine.SelectEnemy enemyMsg)
+            current.HandleSelectEnemy(enemyMsg.enemyIndex);
+        else if (message is BattleEventDefine.SelectAlly allyMsg)
+            current.HandleSelectAlly(allyMsg.allyIndex);
+        else if (message is BattleEventDefine.PlayerDefend)
+            current.HandleDefend();
     }
 
 #endregion
@@ -481,12 +513,12 @@ public class BattleState : BaseState
     private static void EnsureStatDefaults(BaseInfo info)
     {
         if (info == null) return;
-        // maxHp/hp：0 或负值视为未配置（0 血角色无意义）
+        // maxHp/hp：0 或负值视为未配置（0 血角色无意义），始终重置为满血
         if (info.maxHp.value <= 0)  info.maxHp.value = 100;
-        if (info.hp.value <= 0)     info.hp.value = info.maxHp.value;
-        // 其余属性：仅负值视为未配置，0 是合法值（如无 MP、0 攻击、0 护盾）
+        info.hp.value = info.maxHp.value;
+        // 其余属性：仅负值视为未配置，0 是合法值（如无 MP、0 攻击、0 护盾），始终重置为满蓝
         if (info.maxMp.value < 0)  info.maxMp.value = 50;
-        if (info.mp.value < 0)     info.mp.value = info.maxMp.value;
+        info.mp.value = info.maxMp.value;
         if (info.attack.value < 0) info.attack.value = 20;
         if (info.speed.value < 0)  info.speed.value = 10;
         if (info.shieldValue.value < 0) info.shieldValue.value = 10;
@@ -1059,6 +1091,56 @@ public class BattleState : BaseState
     {
         Machine.ClearSuspendedNodes();
         StateEventDefine.ChangeState.SendEventMessage<GameStart>("GameStart");
+    }
+
+    /// <summary>
+    /// 重新开始当场战斗（仅重置战斗状态，不经过 NodeGameEvent 整个节点流程）。
+    /// 用于"逃跑"按钮和战斗失败后的"重来"按钮。
+    /// </summary>
+    private void RestartBattle()
+    {
+        // 1. 清理旧的子状态机（防止残留的 PlayerBattleState/EnemyBattleState 实例）
+        //    同时清除静态 Current 引用，防止旧 PlayerBattleState 实例无法被 GC
+        PlayerBattleState.Current = null;
+        battleMachine = new StateMachine();
+
+        // 2. 清空战斗数据
+        roleList.Clear();
+        enemyList.Clear();
+        roundQueue.Clear();
+        roundList.Clear();
+        currentFullQueue = null;
+
+        // 3. 清空 buff / 中途事件状态
+        everyRoundBuffs.Clear();
+        roleInitialStats.Clear();
+        triggeredMidEventIndices.Clear();
+        EnemyAI.Reset();
+
+        // 4. 重置所有状态标记
+        round = 0;
+        isBattleStart = false;
+        isBattleEnded = false;
+        isLoadPhase = false;
+        isWaitingTurnDelay = false;
+        roundAdvanced = false;
+        turnDelay = 0f;
+        loadDelay = 0f;
+
+        // 5. 重新初始化战斗数据 + 更新立绘
+        isBattleStart = true;
+        InitBattle();
+
+        // 6. 设置准备阶段计时器（与 OnEnter 首次进入流程对齐）
+        isLoadPhase = true;
+        loadDelay = 1.2f;
+
+        // 7. 处理战斗开始事件（如对话/分支），
+        //    事件返回后由 OnEnter else 分支恢复准备阶段
+        if (battleSetting.startEvent != EBattleStartEvent.None)
+        {
+            StartEvent(battleSetting.startEvent);
+        }
     }
 
 #endregion

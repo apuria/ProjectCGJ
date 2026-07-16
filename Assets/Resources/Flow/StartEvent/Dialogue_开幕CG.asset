@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030013200b5fac74bbd9b89d55fbb568, type: 3}
   m_Name: "Dialogue_\u5F00\u5E55CG"
   m_EditorClassIdentifier: 
+  bgmName: 
   hasReturnButton: 0
   hasBackground: 0
   BackGround: {fileID: 0}

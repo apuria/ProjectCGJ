@@ -19,16 +19,28 @@ MonoBehaviour:
   moreItemBranches:
   - branchId: 
     choose: 
-    buffInfo: {fileID: 11400000, guid: 6a07439d224270e40b8975e10052fbb0, type: 2}
-    isForAllRole: 1
-    roleIndex: 0
-    isEveryRound: 1
-  - branchId: 
-    choose: 
     buffInfo: {fileID: 11400000, guid: c3d65a1d45e8eaf45a61b97312713b8d, type: 2}
     isForAllRole: 1
     roleIndex: 0
     isEveryRound: 0
+  - branchId: 
+    choose: 
+    buffInfo: {fileID: 11400000, guid: 1f26e3d893fd3644781461d9cf972a93, type: 2}
+    isForAllRole: 1
+    roleIndex: 2
+    isEveryRound: 0
+  - branchId: 
+    choose: 
+    buffInfo: {fileID: 11400000, guid: 83a5bb70293bb274cad5d084403920d9, type: 2}
+    isForAllRole: 1
+    roleIndex: 2
+    isEveryRound: 1
+  - branchId: 
+    choose: 
+    buffInfo: {fileID: 11400000, guid: 766b746f9a52d1e448ba233b159292ac, type: 2}
+    isForAllRole: 1
+    roleIndex: 2
+    isEveryRound: 1
   moreRoleBranches: []
   startEvent: 0
   startDialogue: {fileID: 0}

@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: EndSetting
   m_EditorClassIdentifier: 
   endBranches:
-  - branches:
-    - chosen: 
-      text: 
-    Setting: {fileID: 11400000, guid: 40e3aa2ae9dd0914aa8cf4ea81574f7b, type: 2}
+  - branches: []
+    Setting: {fileID: 11400000, guid: 5425dd376fcd60e48b05bea428b6b0b1, type: 2}
   - branches: []
     Setting: {fileID: 11400000, guid: 5425dd376fcd60e48b05bea428b6b0b1, type: 2}

@@ -13,6 +13,13 @@ public class PlayerBattleState : BaseBattleState
 
     private const float MinWaitTime = 1.5f;
 
+    /// <summary>
+    /// 当前活跃的 PlayerBattleState 实例。
+    /// BattleState 通过此引用将玩家输入事件转发给正确的实例，
+    /// 避免子状态机中多个实例的 EventGroup 监听器残留导致攻击/防御叠加 bug。
+    /// </summary>
+    public static PlayerBattleState Current { get;set; }
+
     public override void OnCreate(StateMachine machine, IStateData stateData)
     {
         base.OnCreate(machine, stateData);
@@ -23,11 +30,8 @@ public class PlayerBattleState : BaseBattleState
     {
         pendingSkill = null;
 
-        // 注册技能/敌人选择/队友选择/防御监听
-        eventGroup.AddListener<BattleEventDefine.SelectSkill>(OnHandleSelectSkill);
-        eventGroup.AddListener<BattleEventDefine.SelectEnemy>(OnHandleSelectEnemy);
-        eventGroup.AddListener<BattleEventDefine.SelectAlly>(OnHandleSelectAlly);
-        eventGroup.AddListener<BattleEventDefine.PlayerDefend>(OnHandleDefend);
+        // 注册为当前活跃的 PlayerBattleState，供 BattleState 转发玩家输入事件
+        Current = this;
 
         // 发送 UI 更新事件
         BattleEventDefine.UpdateActionSide.SendEventMessage(
@@ -39,7 +43,8 @@ public class PlayerBattleState : BaseBattleState
 
     public override void OnExit()
     {
-        eventGroup.RemoveAllListener();
+        if (Current == this)
+            Current = null;
     }
 
     public override void OnUpdate()
@@ -55,10 +60,9 @@ public class PlayerBattleState : BaseBattleState
     /// <summary>
     /// 选择了技能：检查 MP → AOE 直接执行，否则等待选敌人
     /// </summary>
-    private void OnHandleSelectSkill(IEventMessage message)
+    public void HandleSelectSkill(SkillInfo skill)
     {
-        var msg = (BattleEventDefine.SelectSkill)message;
-        pendingSkill = msg.skill;
+        pendingSkill = skill;
 
         if (pendingSkill == null) return;
 
@@ -87,7 +91,7 @@ public class PlayerBattleState : BaseBattleState
     /// <summary>
     /// 防御：恢复 5%~10% MP + 获得临时护盾（不再回复 HP）
     /// </summary>
-    private void OnHandleDefend(IEventMessage message)
+    public void HandleDefend()
     {
         if (info.roleInfo == null)
         {
@@ -115,13 +119,11 @@ public class PlayerBattleState : BaseBattleState
     /// <summary>
     /// 选择了敌人：结合待执行技能执行攻击
     /// </summary>
-    private void OnHandleSelectEnemy(IEventMessage message)
+    public void HandleSelectEnemy(int enemyIndex)
     {
-        var msg = (BattleEventDefine.SelectEnemy)message;
-
         if (pendingSkill != null)
         {
-            ConsumeMpAndExecute(pendingSkill, () => ExecuteAttack(pendingSkill, msg.enemyIndex));
+            ConsumeMpAndExecute(pendingSkill, () => ExecuteAttack(pendingSkill, enemyIndex));
             pendingSkill = null;
         }
         else
@@ -134,13 +136,11 @@ public class PlayerBattleState : BaseBattleState
     /// <summary>
     /// 选择了队友：结合待执行技能执行治疗
     /// </summary>
-    private void OnHandleSelectAlly(IEventMessage message)
+    public void HandleSelectAlly(int allyIndex)
     {
-        var msg = (BattleEventDefine.SelectAlly)message;
-
         if (pendingSkill != null)
         {
-            ConsumeMpAndExecute(pendingSkill, () => ExecuteHealAlly(pendingSkill, msg.allyIndex));
+            ConsumeMpAndExecute(pendingSkill, () => ExecuteHealAlly(pendingSkill, allyIndex));
             pendingSkill = null;
         }
         else

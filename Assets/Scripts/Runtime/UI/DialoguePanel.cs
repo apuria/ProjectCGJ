@@ -178,10 +178,8 @@ public class DialoguePanel : BasePanel
     /// </summary>
     private void HandleCGDialogue(DiaLogueEventDefine.UpdateUI updateUI)
     {
-        // 隐藏人物立绘（保留名字用于后续判断）
-        leftRoleBg.gameObject.SetActive(false);
+        // 隐藏人物立绘（名字背景板和名字由 UpdateRoleNames 统一管理）
         leftRole.gameObject.SetActive(false);
-        rightRoleBg.gameObject.SetActive(false);
         rightRole.gameObject.SetActive(false);
 
         // 显示 CG 图片
@@ -213,8 +211,10 @@ public class DialoguePanel : BasePanel
         }
         else
         {
-            // 隐藏角色名字
+            // 隐藏角色名字和名字背景板
+            leftRoleBg.gameObject.SetActive(false);
             leftRoleName.gameObject.SetActive(false);
+            rightRoleBg.gameObject.SetActive(false);
             rightRoleName.gameObject.SetActive(false);
 
             // 无对话框：直接显示继续按钮
@@ -296,7 +296,6 @@ public class DialoguePanel : BasePanel
 
         // 规则2：有角色 → 根据是否有立绘分别处理
         bool hasArt = speaker.CharaArtwork != null;
-        roleBg.gameObject.SetActive(hasArt);
         roleArt.gameObject.SetActive(hasArt);
         if (hasArt)
         {
@@ -311,10 +310,15 @@ public class DialoguePanel : BasePanel
             roleName.text = speaker.name;
         }
 
+        // 名字背景板（SpeakerNameBackGround）：
+        // 注意：roleName 是 roleBg 的子对象，所以必须确保
+        // roleBg 在有名字或有立绘时都处于激活状态
+        roleBg.gameObject.SetActive(hasArt || hasName);
+
         // 高亮/变暗：当前说话侧高亮，另一侧变暗
         Color tint = isTalking ? Color.white : Color.gray;
         roleArt.color = tint;
-        roleName.color = tint;
+        roleName.color = isTalking ? Color.black : Color.gray;
     }
 
     /// <summary>
@@ -337,35 +341,41 @@ public class DialoguePanel : BasePanel
     {
         if (speakers == null)
         {
+            leftRoleBg.gameObject.SetActive(false);
             leftRoleName.gameObject.SetActive(false);
+            rightRoleBg.gameObject.SetActive(false);
             rightRoleName.gameObject.SetActive(false);
             return;
         }
 
         // 左侧角色名字
-        ApplyRoleNameOnly(updateUI.leftRoleIndex, updateUI.speaker == TalkingSpeaker.Left, leftRoleName);
+        ApplyRoleNameOnly(updateUI.leftRoleIndex, updateUI.speaker == TalkingSpeaker.Left,
+            leftRoleBg, leftRoleName);
 
         // 右侧角色名字
-        ApplyRoleNameOnly(updateUI.rightRoleIndex, updateUI.speaker == TalkingSpeaker.Right, rightRoleName);
+        ApplyRoleNameOnly(updateUI.rightRoleIndex, updateUI.speaker == TalkingSpeaker.Right,
+            rightRoleBg, rightRoleName);
     }
 
     /// <summary>
     /// 为单侧角色仅设置名字（CG 模式用，不显示立绘）
     /// </summary>
-    private void ApplyRoleNameOnly(int roleIndex, bool isTalking, TextMeshProUGUI roleName)
+    private void ApplyRoleNameOnly(int roleIndex, bool isTalking, Image roleBg, TextMeshProUGUI roleName)
     {
-        // 规则1：索引为 -1 或 speakers 中无此角色 → 隐藏名字
+        // 规则1：索引为 -1 或 speakers 中无此角色 → 隐藏名字和名字背景板
         Speaker speaker = GetSpeaker(roleIndex);
         if (speaker == null || string.IsNullOrEmpty(speaker.name))
         {
+            roleBg.gameObject.SetActive(false);
             roleName.gameObject.SetActive(false);
             return;
         }
 
-        // 规则2：有名字 → 显示（CG 模式下立绘已在 HandleCGDialogue 中统一隐藏）
+        // 规则2：有名字 → 显示名字和名字背景板（CG 模式下立绘已在 HandleCGDialogue 中统一隐藏）
+        roleBg.gameObject.SetActive(true);
         roleName.gameObject.SetActive(true);
         roleName.text = speaker.name;
-        roleName.color = isTalking ? Color.white : Color.gray;
+        roleName.color = isTalking ? Color.black : Color.gray;
     }
 
     /// <summary>
