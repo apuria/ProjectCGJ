@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: "\u54E5\u5E03\u6797"
   m_EditorClassIdentifier: 
   Name: "\u54E5\u5E03\u6797"
-  avatar: {fileID: -1480482415, guid: 46a4acaa883683640a592fa73d883470, type: 3}
-  icon: {fileID: -1480482415, guid: 46a4acaa883683640a592fa73d883470, type: 3}
+  avatar: {fileID: -1337228275, guid: e62eceb1125750d479a72d859731030a, type: 3}
+  icon: {fileID: -1337228275, guid: e62eceb1125750d479a72d859731030a, type: 3}
   scale: 1
   attack:
     value: 12
